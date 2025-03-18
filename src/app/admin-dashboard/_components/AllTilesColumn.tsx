@@ -32,9 +32,8 @@ export const AllTilesColumn: ColumnDef<AllTilesDataType>[] = [
     enableHiding: false,
   },
   {
-    header: "Query",
+    header: "Tiles",
     cell: ({ row }) => {
-        console.log({row})
       return (
         <div className="">
           <Image src={row.original.image} alt="tile image" width={75} height={75}/>
@@ -43,12 +42,11 @@ export const AllTilesColumn: ColumnDef<AllTilesDataType>[] = [
     },
   },
   {
-    header: "Query",
+    header: "Title",
     cell: ({ row }) => {
-        console.log({row})
       return (
-        <div className="w-[250px] h-[44px] flex justify-center gap-[2px]">
-          <span className="text-lg font-semibold leading-[21px] text-gradient text-center">{row.original.title}</span>
+        <div className="w-[250px] h-[44px] flex justify-center items-center gap-[2px]">
+          <span className="text-base font-normal text-black leading-[120%] text-center">{row.original.title}</span>
         </div>
       );
     },
@@ -56,10 +54,9 @@ export const AllTilesColumn: ColumnDef<AllTilesDataType>[] = [
   {
     header: "Category",
     cell: ({ row }) => {
-        console.log({row})
       return (
-        <div className="w-[250px] h-[44px] flex justify-center gap-[2px]">
-          <span className="text-lg font-semibold leading-[21px] text-gradient text-center">{row.original.category}</span>
+        <div className="w-[250px] h-[44px] flex justify-center items-center gap-[2px]">
+          <span className="text-base font-normal text-black leading-[120%] text-center">{row.original.category}</span>
         </div>
       );
     },
@@ -67,10 +64,9 @@ export const AllTilesColumn: ColumnDef<AllTilesDataType>[] = [
   {
     header: "Added",
     cell: ({ row }) => {
-        console.log({row})
       return (
-        <div className="w-[250px] h-[44px] flex justify-center gap-[2px]">
-          <span className="text-lg font-semibold leading-[21px] text-gradient text-center">{row.original.added}</span>
+        <div className="w-[250px] h-[44px] flex justify-center items-center gap-[2px]">
+          <span className="text-base font-normal text-black leading-[120%] text-center">{row.original.added}</span>
         </div>
       );
     },
@@ -81,9 +77,9 @@ export const AllTilesColumn: ColumnDef<AllTilesDataType>[] = [
     cell: () => {
       return (
         <div className="flex items-center gap-[10px]">
-            <span><Eye className="w-5 h-5"/></span>
-            <span><FiEdit className="w-5 h-5"/></span>
-            <span><Trash2 className="w-5 h-5"/></span>
+            <button><Eye className="w-5 h-5 cursor-pointer"/></button>
+            <button><FiEdit className="w-5 h-5 cursor-pointer"/></button>
+            <button><Trash2 className="w-5 h-5 hover:text-primary cursor-pointer"/></button>
         </div>
       );
     },

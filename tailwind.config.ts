@@ -23,10 +23,12 @@ const config: Config = {
   			primary: {
   				DEFAULT: '#CE3837',
   				50: '#7C2221',
+  				100: '#E6E6E6',
   			},
   			secondary: {
-  				DEFAULT: 'hsl(var(--secondary))',
-  				foreground: 'hsl(var(--secondary-foreground))'
+  				DEFAULT: '#F8E1E1',
+  				50: '#F0C1C1',
+  				100: '#707070',
   			},
   			muted: {
   				DEFAULT: 'hsl(var(--muted))',
