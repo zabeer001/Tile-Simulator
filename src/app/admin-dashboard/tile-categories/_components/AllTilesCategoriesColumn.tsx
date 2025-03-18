@@ -5,6 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import {  Trash2 } from "lucide-react";
 import { FiEdit } from "react-icons/fi";
 import { AllTilesCategoriesDataType } from "./AllTilesCategoriesData";
+import Link from "next/link";
 
 
 export const AllTilesCategoriesColumn: ColumnDef<AllTilesCategoriesDataType>[] = [
@@ -69,7 +70,9 @@ export const AllTilesCategoriesColumn: ColumnDef<AllTilesCategoriesDataType>[] =
     cell: () => {
       return (
         <div className="flex items-center gap-[10px]">
-            <button><FiEdit className="w-5 h-5"/></button>
+            <Link href="/admin-dashboard/add-edit-categories">
+            <FiEdit className="w-5 h-5" />
+          </Link>
             <button><Trash2 className="w-5 h-5"/></button>
         </div>
       );

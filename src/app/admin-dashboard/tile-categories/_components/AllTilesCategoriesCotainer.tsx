@@ -8,18 +8,6 @@ const AllTilesCategoriesCotainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
   return (
     <section className="w-full">
-      <div>
-        <div>
-          <div>
-            <h1>Tile Categories</h1>
-            <div>
-              <Link href="/admin-dashboard">Dashboard</Link>
-              <Link href="/admin-dashboard/tile-categories">Tile Categories</Link>
-            </div>
-          </div>
-        </div>
-        <div></div>
-      </div>
       <div className="w-full shadow-[0px_0px_22px_8px_#C1C9E4] h-auto  rounded-[24px] bg-white">
         <TableContainer data={AllTilesCategoriesData} columns={AllTilesCategoriesColumn} />
       </div>
@@ -46,8 +34,6 @@ import { useState } from "react";
 import TilePagination from "@/components/ui/TilePagination";
 import { AllTilesCategoriesData, AllTilesCategoriesDataType } from "./AllTilesCategoriesData";
 import { AllTilesCategoriesColumn } from "./AllTilesCategoriesColumn";
-import Link from "next/link";
-
 
 
 const TableContainer = ({
