@@ -26,9 +26,9 @@ export function DataTable<TData, TValue>({
   table,
 }: DataTableProps<TData, TValue>) {
   return (
-    <div className="rounded-3xl border pt-[32px] bg-white">
+    <div className="rounded-3xl border bg-white">
       <Table>
-        <TableHeader>
+        <TableHeader className="bg-primary-100">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow
               key={headerGroup.id}
@@ -38,7 +38,7 @@ export function DataTable<TData, TValue>({
             >
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id} className="text-center">
+                  <TableHead key={header.id} className="text-center py-6 text-xl font-medium text-black leading-[120%]">
                     {header.isPlaceholder
                       ? null
                       : flexRender(

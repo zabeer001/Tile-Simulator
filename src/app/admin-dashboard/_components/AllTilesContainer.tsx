@@ -10,8 +10,8 @@ const AllTilesContainer = () => {
     <TableContainer data={AllTilesData} columns={AllTilesColumn} />
     </div>
     <div className="mt-[30px]  w-full pb-[208px]  flex justify-between">
-      <p className="font-normal text-[16px] leading-[19.2px] text-[#444444]">
-        Showing 1 to 25 in first entries
+      <p className="font-normal text-base leading-[120%] text-secondary-100">
+      Showing 1-10 from 100
       </p>
       <div>
         <TilePagination
