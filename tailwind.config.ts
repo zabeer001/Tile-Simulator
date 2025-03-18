@@ -29,6 +29,10 @@ const config: Config = {
   				DEFAULT: '#F8E1E1',
   				50: '#F0C1C1',
   				100: '#707070',
+  				200: '#272727',
+  				300: '#595959',
+  				400: '#707070',
+  				500: '#BFBFBF',
   			},
   			muted: {
   				DEFAULT: 'hsl(var(--muted))',
