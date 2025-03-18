@@ -1,9 +1,10 @@
 import React from 'react';
+import AllTilesCategoriesCotainer from './_components/AllTilesCategoriesCotainer';
 
 const TileCategories = () => {
     return (
         <div>
-            TileCategories
+           <AllTilesCategoriesCotainer/> 
         </div>
     );
 };
