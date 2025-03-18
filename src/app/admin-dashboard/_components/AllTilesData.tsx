@@ -49,4 +49,32 @@ export const AllTilesData: AllTilesDataType[] = [
         category: "Pattern Collection",
         added: "21 Sep, 2020",
     },
+    {
+        id: 7,
+        image: "/assets/tile1.png",
+        title: "Shay",
+        category: "Pattern Collection",
+        added: "21 Sep, 2020",
+    },
+    {
+        id: 8,
+        image: "/assets/tile1.png",
+        title: "Shay",
+        category: "Pattern Collection",
+        added: "21 Sep, 2020",
+    },
+    {
+        id: 9,
+        image: "/assets/tile1.png",
+        title: "Shay",
+        category: "Pattern Collection",
+        added: "21 Sep, 2020",
+    },
+    {
+        id: 10,
+        image: "/assets/tile1.png",
+        title: "Shay",
+        category: "Pattern Collection",
+        added: "21 Sep, 2020",
+    }
 ];

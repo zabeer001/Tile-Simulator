@@ -35,7 +35,7 @@ export const AllTilesCategoriesColumn: ColumnDef<AllTilesCategoriesDataType>[] =
     cell: ({ row }) => {
         console.log({row})
       return (
-        <div className="w-[250px] h-[44px] flex justify-center gap-[2px]">
+        <div className="w-[250px] h-[44px] gap-[2px]">
           <span className="text-lg font-semibold leading-[21px] text-gradient text-center">{row.original.CategoriesName}</span>
         </div>
       );
@@ -46,7 +46,7 @@ export const AllTilesCategoriesColumn: ColumnDef<AllTilesCategoriesDataType>[] =
     cell: ({ row }) => {
         console.log({row})
       return (
-        <div className="w-[250px] h-[44px] flex justify-center gap-[2px]">
+        <div className="w-[250px] h-[44px] gap-[2px]">
           <span className="text-lg font-semibold leading-[21px] text-gradient text-center">{row.original.Count}</span>
         </div>
       );
@@ -57,7 +57,7 @@ export const AllTilesCategoriesColumn: ColumnDef<AllTilesCategoriesDataType>[] =
     cell: ({ row }) => {
         console.log({row})
       return (
-        <div className="w-[250px] h-[44px] flex justify-center gap-[2px]">
+        <div className="w-[250px] h-[44px] gap-[2px]">
           <span className="text-lg font-semibold leading-[21px] text-gradient text-center">{row.original.Date}</span>
         </div>
       );

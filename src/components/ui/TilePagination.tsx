@@ -71,13 +71,13 @@ const TilePagination: React.FC<PaginationProps> = ({
               } else handlePageClick(currentPage - 1);
             }}
             className={cn(
-              "border border-[#152764] hover:bg-gradient-to-r hover:from-[#4857BD] hover:via-[#6B87DF] hover:to-[#BCC9FA] hover:text-[#4857BD]",
+              "border border-primary text-primary hover:text-primary-50",
               currentPage === 1 &&
-                "cursor-not-allowed bg-[#E3E3E3] border-0  pointer-events-none"
+                "cursor-not-allowed bg-secondary border-0 pointer-events-none"
             )}
           >
             <ChevronLeft
-              className={cn("h-4 w-4", currentPage === 1 && "text-white")}
+              className={cn("h-4 w-4", currentPage === 1 && "text-secondary-50")}
             />
           </PaginationLink>
         </PaginationItem>
@@ -87,10 +87,10 @@ const TilePagination: React.FC<PaginationProps> = ({
             <PaginationLink
               onClick={() => handlePageClick(page)}
               className={cn(
-                "border cursor-pointer border-[#4857BD] hover:bg-gradient-to-r hover:from-[#4857BD] hover:via-[#6B87DF] hover:to-[#BCC9FA] hover:text-[#4857BD]",
+                "border cursor-pointer border-primary text-primary hover:text-primary-50",
                 page === currentPage
-                  ? "bg-gradient-to-r from-[#121D42] via-[#152764] to-[#4857BD] text-white"
-                  : "hover:bg-gradient-to-r hover:from-[#4857BD] hover:via-[#6B87DF] hover:to-[#BCC9FA] text-gradient hover:text-[#4857BD]"
+                  ? "bg-primary hover:bg-primary-50 text-white hover:text-white"
+                  : "text-primary"
               )}
             >
               {page === "..." ? "..." : page}
@@ -108,9 +108,9 @@ const TilePagination: React.FC<PaginationProps> = ({
               }
             }}
             className={cn(
-              "border border-[#152764] hover:bg-gradient-to-r hover:from-[#4857BD] hover:via-[#6B87DF] hover:to-[#BCC9FA]  hover:text-[#4857BD]",
+              "border border-primary text-primary hover:text-primary-50",
               currentPage === totalPages &&
-                "cursor-not-allowed bg-[#E3E3E3] border-0  pointer-events-none"
+                "cursor-not-allowed bg-transparent border-0 pointer-events-none bg-secondary text-secondary-50"
             )}
           >
             <ChevronRight className="h-4 w-4" />
