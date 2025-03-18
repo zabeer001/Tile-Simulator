@@ -4,8 +4,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { AllTilesDataType } from "./AllTilesData";
-import { Eye, Trash2 } from "lucide-react";
-import { FiEdit } from "react-icons/fi";
+import AuctionButton from "./AuctionButton";
+
 
 
 export const AllTilesColumn: ColumnDef<AllTilesDataType>[] = [
@@ -74,12 +74,10 @@ export const AllTilesColumn: ColumnDef<AllTilesDataType>[] = [
 
   {
     header: "Actions",
-    cell: () => {
+    cell: ({row}) => {
       return (
-        <div className="flex items-center gap-[10px]">
-            <button><Eye className="w-5 h-5 cursor-pointer"/></button>
-            <button><FiEdit className="w-5 h-5 cursor-pointer"/></button>
-            <button><Trash2 className="w-5 h-5 hover:text-primary cursor-pointer"/></button>
+        <div>
+          <AuctionButton row={row}/>
         </div>
       );
     },
