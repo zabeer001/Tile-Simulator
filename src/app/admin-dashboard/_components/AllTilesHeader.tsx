@@ -58,7 +58,7 @@ const AllTilesHeader = () => {
                 "pl-10",
                 "border-secondary-300",
                 "placeholder:text-sm placeholder:text-secondary-400 placeholder:leading-[120%] placeholder:font-normal",
-                "focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-primary-500 focus-visible:outline-none"
+                "focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-secondary-100 focus-visible:outline-none"
               )}
             />
           </div>
