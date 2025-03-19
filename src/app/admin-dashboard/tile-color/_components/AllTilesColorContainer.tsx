@@ -4,12 +4,12 @@ import { useState } from "react"
 import { type ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { DataTable } from "@/components/ui/data-table"
 import TilePagination from "@/components/ui/TilePagination"
-import { AllTilesCategoriesData, type AllTilesCategoriesDataType } from "./AllTilesCategoriesData"
-import { createAllTilesCategoriesColumn } from "./AllTilesCategoriesColumn"
+import { AllTilesColorData, type AllTilesColorDataType } from "./AllTilesColorData"
+import { createAllTilesColorColumn } from "./AllTilesColorColumn"
 
 interface TableContainerProps {
-  data: AllTilesCategoriesDataType[]
-  columns: ColumnDef<AllTilesCategoriesDataType>[]
+  data: AllTilesColorDataType[]
+  columns: ColumnDef<AllTilesColorDataType>[]
 }
 
 const TableContainer = ({ data, columns }: TableContainerProps) => {
@@ -26,18 +26,18 @@ const TableContainer = ({ data, columns }: TableContainerProps) => {
   )
 }
 
-interface AllTilesCategoriesCotainerProps {
-  onEdit: (category: AllTilesCategoriesDataType) => void
+interface AllTilesColorsCotainerProps {
+  onEdit: (color: AllTilesColorDataType) => void
 }
 
-const AllTilesCategoriesCotainer = ({ onEdit }: AllTilesCategoriesCotainerProps) => {
+const AllTilesColorsCotainer = ({ onEdit }: AllTilesColorsCotainerProps) => {
   const [currentPage, setCurrentPage] = useState(1)
-  const columns = createAllTilesCategoriesColumn({ onEdit })
+  const columns = createAllTilesColorColumn({ onEdit })
 
   return (
     <section className="w-full">
       <div className="w-full shadow-[0px_0px_22px_8px_#C1C9E4] h-auto rounded-[24px] bg-white">
-        <TableContainer data={AllTilesCategoriesData} columns={columns} />
+        <TableContainer data={AllTilesColorData} columns={columns} />
       </div>
       <div className="mt-[30px] w-full pb-[208px] flex justify-between">
         <p className="font-normal text-[16px] leading-[19.2px] text-[#444444]">Showing 1 to 25 in first entries</p>
@@ -49,5 +49,5 @@ const AllTilesCategoriesCotainer = ({ onEdit }: AllTilesCategoriesCotainerProps)
   )
 }
 
-export default AllTilesCategoriesCotainer
+export default AllTilesColorsCotainer
 

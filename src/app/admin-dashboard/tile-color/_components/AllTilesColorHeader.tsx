@@ -7,18 +7,18 @@ import { ListFilter, Search, Trash2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 
-interface AllTilesCategoriesHeaderProps {
+interface AllTilesColorHeaderProps {
   onAddNew: () => void
 }
 
-const AllTilesCategoriesHeader = ({ onAddNew }: AllTilesCategoriesHeaderProps) => {
+const AllTilesColorHeader = ({ onAddNew }: AllTilesColorHeaderProps) => {
   const [search, setSearch] = useState("")
 
   return (
     <div>
       <div className="flex items-center justify-between pb-[20px]">
         <div>
-          <h2 className="text-2xl font-semibold leading-[120%] text-black">Tile Categories</h2>
+          <h2 className="text-2xl font-semibold leading-[120%] text-black">Tile Colors</h2>
           <div className="flex items-center gap-2 pt-2">
             <Link href="/admin-dashboard" className="text-base font-medium leading-[120%] text-secondary-200">
               Dashboard
@@ -28,10 +28,10 @@ const AllTilesCategoriesHeader = ({ onAddNew }: AllTilesCategoriesHeaderProps) =
               <RiArrowRightSLine />{" "}
             </span>
             <Link
-              href="admin-dashboard/tile-categories"
+              href="admin-dashboard/tile-colors"
               className="text-base font-medium leading-[120%] text-secondary-300"
             >
-              Tile Categories
+              Tile Colors
             </Link>
           </div>
         </div>
@@ -40,7 +40,7 @@ const AllTilesCategoriesHeader = ({ onAddNew }: AllTilesCategoriesHeaderProps) =
             onClick={onAddNew}
             className="flex items-center gap-2 text-white bg-primary py-4 px-8 text-base font-medium leading-[120%] rounded-[8px]"
           >
-            <FaPlus /> Add New Tile Categories
+            <FaPlus /> Add New Tile Color
           </button>
         </div>
       </div>
@@ -50,7 +50,7 @@ const AllTilesCategoriesHeader = ({ onAddNew }: AllTilesCategoriesHeaderProps) =
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary-400" size={24} />
             <Input
               type="search"
-              placeholder="Search category..."
+              placeholder="Search color..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className={cn(
@@ -77,5 +77,5 @@ const AllTilesCategoriesHeader = ({ onAddNew }: AllTilesCategoriesHeaderProps) =
   )
 }
 
-export default AllTilesCategoriesHeader
+export default AllTilesColorHeader
 

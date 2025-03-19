@@ -1,14 +1,42 @@
-import React from 'react';
-import AllTilesCategoriesCotainer from './_components/AllTilesCategoriesCotainer';
-import AllTilesCategoriesHeader from './_components/AllTilesCategoriesHeader';
+"use client"
+
+import { useState } from "react"
+import AllTilesCategoriesHeader from "./_components/AllTilesCategoriesHeader"
+import AllTilesCategoriesCotainer from "./_components/AllTilesCategoriesCotainer"
+import AddTileEditAndAddCategories from "./_components/AllTilesEdit-addCategories"
+import type { AllTilesCategoriesDataType } from "./_components/AllTilesCategoriesData"
 
 const TileCategories = () => {
-    return (
-        <div>
-           <AllTilesCategoriesHeader/>
-           <AllTilesCategoriesCotainer/> 
-        </div>
-    );
-};
+  const [isAddingOrEditing, setIsAddingOrEditing] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState<AllTilesCategoriesDataType | null>(null)
 
-export default TileCategories;
+  const handleAddNew = () => {
+    setSelectedCategory(null)
+    setIsAddingOrEditing(true)
+  }
+
+  const handleEdit = (category: AllTilesCategoriesDataType) => {
+    setSelectedCategory(category)
+    setIsAddingOrEditing(true)
+  }
+
+  const handleCancel = () => {
+    setIsAddingOrEditing(false)
+    setSelectedCategory(null)
+  }
+
+  return (
+    <div>
+      {!isAddingOrEditing && <AllTilesCategoriesHeader onAddNew={handleAddNew} />}
+
+      {isAddingOrEditing ? (
+        <AddTileEditAndAddCategories category={selectedCategory} onCancel={handleCancel} />
+      ) : (
+        <AllTilesCategoriesCotainer onEdit={handleEdit} />
+      )}
+    </div>
+  )
+}
+
+export default TileCategories
+
