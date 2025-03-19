@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -22,24 +21,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
-import ImageUpload from "@/components/ui/image-upload";
+import { AddPhotoSvgEditor } from "./svg-editor";
+import { toast } from "sonner";
+import { useCallback, useState } from "react";
+import { Save } from "lucide-react";
 
 const formSchema = z.object({
-  name: z.string().min(2, {
+  name: z.string().min(4, {
     message: "Tile Name must be at least 4 characters.",
   }),
-  description: z.string().min(2, {
+  description: z.string().min(10, {
     message: "Description must be at least 10 characters.",
   }),
   category: z.string().min(2, {
-    message: "Category must be at least 10 characters.",
+    message: "Category must be at least 2 characters.",
   }),
   gridSelection: z.string().min(2, {
-    message: "Description must be at least 10 characters.",
+    message: "Grid Selection must be at least 2 characters.",
   }),
-  image: z.instanceof(File).optional(),
 });
+
+type FormValues = z.infer<typeof formSchema>;
 
 const categoryData = [
   "Pattern Collection",
@@ -57,17 +59,14 @@ const categoryData = [
   "Rectangle 4x8",
   "Rectangle 2x8",
 ];
-const category = categoryData?.map((data) => ({ value: data, label: data }));
-
 const gridSelectionData = ["1x1", "2x2"];
-const gridSelection = gridSelectionData?.map((data) => ({
-  value: data,
-  label: data,
-}));
 
 const AddNewTile = () => {
-  const [imageError, setImageError] = useState<string | null>(null);
-  const form = useForm<z.infer<typeof formSchema>>({
+  const [svgData, setSvgData] = useState<string>("");
+  const [usedColors, setUsedColors] = useState<string[]>([]);
+  const [pathColors, setPathColors] = useState<Record<string, string>>({});
+
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -77,157 +76,179 @@ const AddNewTile = () => {
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!values.image && !form.getValues("image")) {
-      setImageError("Please upload an SVG image");
-      return;
-    }
-    console.log({
-      ...values,
-      image: values.image,
-    });
-  }
-  return (
-    <div>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-[14px]">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base font-medium leading-[120%] text-secondary-200">
-                  Tile Name
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    className="h-[40px] placeholder:text-secondary-100 placeholder:text-base placeholder:font-normal placeholder:leading-[120%] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-secondary-100 focus-visible:outline-none"
-                    placeholder="Input The Tile"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base font-medium leading-[120%] text-secondary-200">
-                  Description
-                </FormLabel>
-                <FormControl>
-                  <Textarea
-                    className="h-[156px] placeholder:text-secondary-100 placeholder:text-base placeholder:font-normal placeholder:leading-[120%] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-secondary-100 focus-visible:outline-none"
-                    placeholder="Type category description here. . ."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+  const onSubmit = (data: FormValues) => {
+    const formData = {
+      tileName: data.name,
+      description: data.description,
+      category: data.category,
+      gridSelection: data.gridSelection,
+      svg: svgData,
+      colorsUsed: usedColors,
+      pathColors: pathColors,
+    };
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-[14px]">
-            <div className="md:grid-cols-1">
-              <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-base font-medium leading-[120%] text-secondary-200">
-                      Category
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger className="w-full h-[40px] placeholder:text-secondary-100 placeholder:text-base placeholder:font-normal placeholder:leading-[120%] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-secondary-100 focus-visible:outline-none border-secondary-100 focus:outline-none outline-none">
-                          <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                        <SelectContent className="w-[268px] bg-secondary">
-                          {category?.map((item) => (
-                            <SelectItem key={item.value} value={item.value}>
-                              {item.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+    console.log("Form data:", formData);
+
+    toast.success("Form submitted", {
+      description: "Check console for form data",
+    });
+  };
+
+  const handleSvgChange = useCallback((newSvgData: string) => {
+    setSvgData(newSvgData);
+  }, []);
+
+  const handleColorsChange = useCallback((colors: string[]) => {
+    setUsedColors(colors);
+  }, []);
+
+  const handlePathColorsChange = useCallback(
+    (colors: Record<string, string>) => {
+      setPathColors(colors);
+    },
+    []
+  );
+
+  return (
+    <div className="pb-14">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8 border border-[#B0B0B0] rounded-[8px] p-6">
+            <div className="md:grid-cols-1 ">
+              <div className="pb-[14px]">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base font-medium text-secondary-200">
+                        Tile Name
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          className="h-[40px] placeholder:text-secondary-100 focus-visible:ring-0"
+                          placeholder="Input The Tile"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="pb-[14px]">
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base font-medium text-secondary-200">
+                        Description
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea
+                          className="h-[156px] placeholder:text-secondary-100 focus-visible:ring-0"
+                          placeholder="Type category description here..."
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-[14px]">
+                <div className="pb-[14px]">
+                  <FormField
+                    control={form.control}
+                    name="category"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-base font-medium text-secondary-200">
+                          Category
+                        </FormLabel>
+                        <FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <SelectTrigger className="w-full h-[40px] border-secondary-100">
+                              <SelectValue placeholder="Select a category" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {categoryData.map((item) => (
+                                <SelectItem key={item} value={item}>
+                                  {item}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="pb-[14px]">
+                  <FormField
+                    control={form.control}
+                    name="gridSelection"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-base font-medium text-secondary-200">
+                          Grid Selection
+                        </FormLabel>
+                        <FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <SelectTrigger className="w-full h-[40px] border-secondary-100">
+                              <SelectValue placeholder="Select a grid" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {gridSelectionData.map((item) => (
+                                <SelectItem key={item} value={item}>
+                                  {item}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
             </div>
+
             <div className="md:grid-cols-1">
-              <FormField
-                control={form.control}
-                name="gridSelection"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-base font-medium leading-[120%] text-secondary-200">
-                      Grid Selection
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger className="w-full h-[40px] placeholder:text-secondary-100 placeholder:text-base placeholder:font-normal placeholder:leading-[120%] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-secondary-100 focus-visible:outline-none border-secondary-100 focus:outline-none outline-none">
-                          <SelectValue placeholder="Select a grid" />
-                        </SelectTrigger>
-                        <SelectContent className="w-[268px] bg-secondary-50">
-                          {gridSelection?.map((item) => (
-                            <SelectItem key={item.value} value={item.value}>
-                              {item.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <FormLabel className="text-xl font-semibold text-[#1A1C21] leading-[120%]">
+                Add Photo
+              </FormLabel>
+              <div className="pt-[14px]">
+                <AddPhotoSvgEditor
+                  onSvgChange={handleSvgChange}
+                  onColorsChange={handleColorsChange}
+                  onPathColorsChange={handlePathColorsChange}
+                />
+              </div>
+              {/* button  */}
+              <div className="pt-10 w-full flex items-center justify-end">
+                <button
+                  type="submit"
+                  className="flex items-center gap-2 text-white bg-primary py-4 px-8 text-base font-medium leading-[120%] rounded-[8px]"
+                >
+                  {" "}
+                  <Save /> Save tile
+                </button>
+              </div>
             </div>
           </div>
-
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base font-medium leading-[120%] text-secondary-200">
-                  Add Photo
-                </FormLabel>
-                <FormControl>
-                  <div className="mt-1">
-                    <ImageUpload
-                      label="SVG Image"
-                      acceptedFileTypes={["image/svg+xml"]}
-                      onImageUpload={(file) => {
-                        field.onChange(file);
-                        setImageError(null);
-                        console.log("SVG file to upload:", file);
-                      }}
-                    />
-                  </div>
-                </FormControl>
-                {imageError && (
-                  <p className="text-sm font-medium text-destructive mt-2">
-                    {imageError}
-                  </p>
-                )}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button type="submit">Submit</Button>
         </form>
       </Form>
     </div>
