@@ -15,7 +15,7 @@ const AuctionButton = ({ row } : any) => {
 
   return (
     <div>
-      <div className="flex items-center gap-[10px]">
+      <div className="w-full flex justify-center items-center gap-[10px]">
         <button>
           <Eye className="w-5 h-5 cursor-pointer" />
         </button>

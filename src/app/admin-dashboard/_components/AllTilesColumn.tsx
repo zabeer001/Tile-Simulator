@@ -35,7 +35,7 @@ export const AllTilesColumn: ColumnDef<AllTilesDataType>[] = [
     header: "Tiles",
     cell: ({ row }) => {
       return (
-        <div className="">
+        <div className="w-full flex justify-center items-center">
           <Image src={row.original.image} alt="tile image" width={75} height={75}/>
         </div>
       );
@@ -45,7 +45,7 @@ export const AllTilesColumn: ColumnDef<AllTilesDataType>[] = [
     header: "Title",
     cell: ({ row }) => {
       return (
-        <div className="w-[250px] h-[44px] flex justify-center items-center gap-[2px]">
+        <div className="w-full flex justify-center items-center">
           <span className="text-base font-normal text-black leading-[120%] text-center">{row.original.title}</span>
         </div>
       );
@@ -55,7 +55,7 @@ export const AllTilesColumn: ColumnDef<AllTilesDataType>[] = [
     header: "Category",
     cell: ({ row }) => {
       return (
-        <div className="w-[250px] h-[44px] flex justify-center items-center gap-[2px]">
+        <div className="w-full flex justify-center items-center">
           <span className="text-base font-normal text-black leading-[120%] text-center">{row.original.category}</span>
         </div>
       );
@@ -65,7 +65,7 @@ export const AllTilesColumn: ColumnDef<AllTilesDataType>[] = [
     header: "Added",
     cell: ({ row }) => {
       return (
-        <div className="w-[250px] h-[44px] flex justify-center items-center gap-[2px]">
+        <div className="w-full flex justify-center items-center">
           <span className="text-base font-normal text-black leading-[120%] text-center">{row.original.added}</span>
         </div>
       );
