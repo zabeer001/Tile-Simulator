@@ -7,9 +7,10 @@ import ActionsButton from "./ActionsButton"
 
 interface ColumnProps {
   onEdit: (category: AllTilesCategoriesDataType) => void
+  onDelete: (color: AllTilesCategoriesDataType) => void
 }
 
-export const createAllTilesCategoriesColumn = ({ onEdit }: ColumnProps): ColumnDef<AllTilesCategoriesDataType>[] => [
+export const createAllTilesCategoriesColumn = ({ onEdit, onDelete }: ColumnProps): ColumnDef<AllTilesCategoriesDataType>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -66,7 +67,7 @@ export const createAllTilesCategoriesColumn = ({ onEdit }: ColumnProps): ColumnD
     cell: ({ row }) => {
       return (
         <div>
-          <ActionsButton row={row} onEdit={onEdit} />
+          <ActionsButton row={row} onEdit={onEdit} onDelete={onDelete}/>
         </div>
       )
     },
