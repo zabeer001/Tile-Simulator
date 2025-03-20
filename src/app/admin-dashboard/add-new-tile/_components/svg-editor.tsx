@@ -11,17 +11,25 @@ import { Card, CardContent } from "@/components/ui/card"
 
 interface AddPhotoProps {
   onSvgChange: (svgData: string) => void
+  initialSvg?: string // Add this prop to accept initial SVG data
 }
 
-export function AddPhotoSvgEditor({ onSvgChange }: AddPhotoProps) {
-  const [svgContent, setSvgContent] = useState<string | null>(null)
-  const [selectedPath, setSelectedPath] = useState<SVGPathElement | null>(null)
+export function AddPhotoSvgEditor({ onSvgChange, initialSvg }: AddPhotoProps) {
+  const [svgContent, setSvgContent] = useState<string | null>(initialSvg || null)
   const [selectedPathId, setSelectedPathId] = useState<string | null>(null)
+  const [forceRender, setForceRender] = useState(0)
   const svgContainerRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Use refs to track if we need to notify parent of changes
-  const shouldNotifyParent = useRef(false)
+  const shouldNotifyParent = useRef(!!initialSvg)
+
+  // Notify parent of initial SVG if provided
+  useEffect(() => {
+    if (initialSvg && typeof onSvgChange === "function") {
+      onSvgChange(initialSvg)
+    }
+  }, [initialSvg, onSvgChange])
 
   const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -39,6 +47,7 @@ export function AddPhotoSvgEditor({ onSvgChange }: AddPhotoProps) {
       const content = e.target?.result as string
       setSvgContent(content)
       shouldNotifyParent.current = true
+      setSelectedPathId(null)
     }
     reader.readAsText(file)
   }, [])
@@ -67,32 +76,45 @@ export function AddPhotoSvgEditor({ onSvgChange }: AddPhotoProps) {
         const content = e.target?.result as string
         setSvgContent(content)
         shouldNotifyParent.current = true
+        setSelectedPathId(null)
       }
       reader.readAsText(file)
     }
   }, [])
 
-  // Process SVG content when it changes
+  // Process SVG content when it changes or when forceRender changes
   useEffect(() => {
     if (!svgContent || !svgContainerRef.current) return
 
+    // Clear the container first
     svgContainerRef.current.innerHTML = svgContent
 
     const paths = Array.from(svgContainerRef.current.querySelectorAll("path")) as SVGPathElement[]
 
+    // Assign IDs to paths that don't have them
     paths.forEach((path, index) => {
       if (!path.id) {
         path.id = `path-${index}`
       }
     })
 
+    // Add click handlers to all paths
     paths.forEach((path) => {
       path.style.cursor = "pointer"
       path.addEventListener("click", (e) => {
         e.stopPropagation()
-        selectPath(path)
+        setSelectedPathId(path.id)
       })
     })
+
+    // Apply styling to the selected path if there is one
+    if (selectedPathId) {
+      const selectedPath = paths.find((path) => path.id === selectedPathId)
+      if (selectedPath) {
+        selectedPath.style.stroke = "#000000"
+        selectedPath.style.strokeWidth = "2"
+      }
+    }
 
     // Only notify parent if this is a new SVG upload
     if (shouldNotifyParent.current && typeof onSvgChange === "function") {
@@ -105,27 +127,14 @@ export function AddPhotoSvgEditor({ onSvgChange }: AddPhotoProps) {
         path.removeEventListener("click", () => {})
       })
     }
-  }, [svgContent, onSvgChange])
+  }, [svgContent, selectedPathId, forceRender, onSvgChange])
 
-  const selectPath = useCallback(
-    (path: SVGPathElement) => {
-      if (selectedPath) {
-        selectedPath.style.stroke = ""
-        selectedPath.style.strokeWidth = ""
-      }
-
-      path.style.stroke = "#000000"
-      path.style.strokeWidth = "2"
-
-      setSelectedPath(path)
-      setSelectedPathId(path.id)
-
-      toast.info("Path selected", {
-        description: `Path ID: ${path.id}`,
-      })
-    },
-    [selectedPath],
-  )
+  // Clear selection function - completely redraws the SVG without selection
+  const clearSelection = useCallback(() => {
+    setSelectedPathId(null)
+    setForceRender((prev) => prev + 1) // Force a re-render
+    toast.info("Selection cleared")
+  }, [])
 
   return (
     <Card className="border-none">
@@ -157,21 +166,7 @@ export function AddPhotoSvgEditor({ onSvgChange }: AddPhotoProps) {
                   <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()}>
                     Change SVG
                   </Button>
-                  <Button
-                  type="button"
-                    variant="outline"
-                    onClick={() => {
-                      setSelectedPath(null)
-                      setSelectedPathId(null)
-                      if (svgContainerRef.current) {
-                        const paths = Array.from(svgContainerRef.current.querySelectorAll("path")) as SVGPathElement[]
-                        paths.forEach((path) => {
-                          path.style.stroke = ""
-                          path.style.strokeWidth = ""
-                        })
-                      }
-                    }}
-                  >
+                  <Button type="button" variant="outline" onClick={clearSelection} disabled={!selectedPathId}>
                     Clear Selection
                   </Button>
                   <input type="file" ref={fileInputRef} className="hidden" accept=".svg" onChange={handleFileUpload} />
