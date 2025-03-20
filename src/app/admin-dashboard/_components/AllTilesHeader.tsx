@@ -47,11 +47,11 @@ const AllTilesHeader = () => {
           <div className="relative">
             <Search
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary-400"
-              size={24}
+              size={18}
             />
             <Input
               type="search"
-              placeholder="Search category..."
+              placeholder="Search Tile..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className={cn(
