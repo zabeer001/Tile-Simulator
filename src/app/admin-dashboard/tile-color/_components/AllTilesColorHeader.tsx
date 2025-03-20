@@ -28,7 +28,7 @@ const AllTilesColorHeader = ({ onAddNew }: AllTilesColorHeaderProps) => {
               <RiArrowRightSLine />{" "}
             </span>
             <Link
-              href="admin-dashboard/tile-colors"
+              href="/admin-dashboard/tile-color"
               className="text-base font-medium leading-[120%] text-secondary-300"
             >
               Tile Colors
@@ -47,7 +47,7 @@ const AllTilesColorHeader = ({ onAddNew }: AllTilesColorHeaderProps) => {
       <div className="pb-10">
         <div className="flex items-center justify-between">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary-400" size={24} />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary-400" size={18} />
             <Input
               type="search"
               placeholder="Search color..."

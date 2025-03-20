@@ -2,26 +2,19 @@
 
 import { useState } from "react"
 import { Trash2 } from "lucide-react"
-import { FiEdit } from "react-icons/fi"
-import type { AllTilesColorDataType } from "./AllTilesColorData"
-import { DeleteConfirmationColorModal } from "./DeleteConfirmationModal"
+import { AllSubmissionDataType } from "./AllSubmissionData"
+import { DeleteConfirmationSubmissionModal } from "./DeleteConfirmationSubmissionModal"
 
 interface ActionsButtonProps {
   row: {
-    original: AllTilesColorDataType
+    original: AllSubmissionDataType
   }
-  onEdit: (color: AllTilesColorDataType) => void
-  onDelete?: (color: AllTilesColorDataType) => void
+  onDelete?: (color: AllSubmissionDataType) => void
 }
 
-function ActionsButton({ row, onEdit, onDelete }: ActionsButtonProps) {
+function ActionsSubmissionButton({ row, onDelete }: ActionsButtonProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
-  const handleEdit = () => {
-    if (onEdit) {
-      onEdit(row.original)
-    }
-  }
 
   const handleDeleteClick = () => {
     setShowDeleteModal(true)
@@ -30,7 +23,7 @@ function ActionsButton({ row, onEdit, onDelete }: ActionsButtonProps) {
   const handleDeleteConfirm = () => {
     if (onDelete) {
       onDelete(row.original)
-      console.log("Deleted item:", row.original.Name)
+      console.log("Deleted item:", row.original.name)
     }
     setShowDeleteModal(false)
   }
@@ -41,22 +34,19 @@ function ActionsButton({ row, onEdit, onDelete }: ActionsButtonProps) {
 
   return (
     <div className="flex items-center justify-center gap-[10px]">
-      <button onClick={handleEdit}>
-        <FiEdit className="w-5 h-5" />
-      </button>
       <button onClick={handleDeleteClick} className="hover:text-red-600">
         <Trash2 className="w-5 h-5" />
       </button>
 
-      <DeleteConfirmationColorModal
+      <DeleteConfirmationSubmissionModal
         isOpen={showDeleteModal}
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
-        itemName={row.original.Name}
+        itemName={row.original.name}
       />
     </div>
   )
 }
 
-export default ActionsButton
+export default ActionsSubmissionButton
 

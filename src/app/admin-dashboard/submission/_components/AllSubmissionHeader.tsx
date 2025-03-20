@@ -1,17 +1,14 @@
 "use client"
 import { RiArrowRightSLine } from "react-icons/ri"
-import { FaPlus } from "react-icons/fa6"
 import Link from "next/link"
 import { useState } from "react"
 import { ListFilter, Search, Trash2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 
-interface AllTilesCategoriesHeaderProps {
-  onAddNew: () => void
-}
 
-const AllTilesCategoriesHeader = ({ onAddNew }: AllTilesCategoriesHeaderProps) => {
+
+const AllSubmissionHeader = () => {
   const [search, setSearch] = useState("")
 
   return (
@@ -27,21 +24,13 @@ const AllTilesCategoriesHeader = ({ onAddNew }: AllTilesCategoriesHeaderProps) =
               {" "}
               <RiArrowRightSLine />{" "}
             </span>
-            <Link 
-              href="/admin-dashboard/tile-categories"
+            <Link
+              href="/admin-dashboard/submission"
               className="text-base font-medium leading-[120%] text-secondary-300"
             >
-              Tile Categories
+              Tile Submissions
             </Link>
           </div>
-        </div>
-        <div>
-          <button
-            onClick={onAddNew}
-            className="flex items-center gap-2 text-white bg-primary py-4 px-8 text-base font-medium leading-[120%] rounded-[8px]"
-          >
-            <FaPlus /> Add New Tile Categories
-          </button>
         </div>
       </div>
       <div className="pb-10">
@@ -77,5 +66,5 @@ const AllTilesCategoriesHeader = ({ onAddNew }: AllTilesCategoriesHeaderProps) =
   )
 }
 
-export default AllTilesCategoriesHeader
+export default AllSubmissionHeader
 
