@@ -8,9 +8,10 @@ import Image from "next/image"
 
 interface ColumnProps {
   onEdit: (color: AllTilesColorDataType) => void
+  onDelete: (color: AllTilesColorDataType) => void
 }
 
-export const createAllTilesColorColumn = ({ onEdit }: ColumnProps): ColumnDef<AllTilesColorDataType>[] => [
+export const createAllTilesColorColumn = ({ onEdit, onDelete }: ColumnProps): ColumnDef<AllTilesColorDataType>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -41,32 +42,41 @@ export const createAllTilesColorColumn = ({ onEdit }: ColumnProps): ColumnDef<Al
     },
   },
   {
-    header: "Color",
+    header: "Preview",
     cell: ({ row }) => {
+      const isColor = row.original.imageOrColor?.startsWith("#")
+
       return (
         <div className="flex justify-center items-center">
-          <div
-            className="w-8 h-8 rounded-md border border-gray-300"
-            style={{ backgroundColor: row.original.Color || "#ccc" }}
-          />
+          {isColor ? (
+            <div
+              className="w-12 h-12 rounded-md border border-gray-300"
+              style={{ backgroundColor: row.original.imageOrColor || "#ccc" }}
+            />
+          ) : (
+            <div className="w-12 h-12 rounded-md overflow-hidden">
+              <Image
+                src={row.original.imageOrColor || "/placeholder.svg"}
+                alt={row.original.Name}
+                width={48}
+                height={48}
+                className="object-cover w-full h-full"
+              />
+            </div>
+          )}
         </div>
       )
     },
   },
   {
-    header: "Preview",
+    header: "Type",
     cell: ({ row }) => {
+      const isColor = row.original.imageOrColor?.startsWith("#")
       return (
-        <div className="flex justify-center items-center">
-          <div className="w-12 h-12 rounded-md overflow-hidden">
-            <Image
-              src={row.original.image || "/placeholder.svg"}
-              alt={row.original.Name}
-              width={48}
-              height={48}
-              className="object-cover w-full h-full"
-            />
-          </div>
+        <div className="flex justify-center items-center gap-[2px]">
+          <span className="text-base font-normal text-black leading-[120%] text-center">
+            {isColor ? "Color" : "Image"}
+          </span>
         </div>
       )
     },
@@ -86,7 +96,7 @@ export const createAllTilesColorColumn = ({ onEdit }: ColumnProps): ColumnDef<Al
     cell: ({ row }) => {
       return (
         <div>
-          <ActionsButton row={row} onEdit={onEdit} />
+          <ActionsButton row={row} onEdit={onEdit} onDelete={onDelete} />
         </div>
       )
     },
