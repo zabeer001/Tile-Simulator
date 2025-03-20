@@ -63,8 +63,6 @@ const gridSelectionData = ["1x1", "2x2"];
 
 const AddNewTile = () => {
   const [svgData, setSvgData] = useState<string>("");
-  const [usedColors, setUsedColors] = useState<string[]>([]);
-  const [pathColors, setPathColors] = useState<Record<string, string>>({});
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -83,31 +81,17 @@ const AddNewTile = () => {
       category: data.category,
       gridSelection: data.gridSelection,
       svg: svgData,
-      colorsUsed: usedColors,
-      pathColors: pathColors,
     };
-
-    console.log("Form data:", formData);
 
     toast.success("Form submitted", {
       description: "Check console for form data",
     });
+    console.log("Form data:", formData);
   };
 
   const handleSvgChange = useCallback((newSvgData: string) => {
     setSvgData(newSvgData);
   }, []);
-
-  const handleColorsChange = useCallback((colors: string[]) => {
-    setUsedColors(colors);
-  }, []);
-
-  const handlePathColorsChange = useCallback(
-    (colors: Record<string, string>) => {
-      setPathColors(colors);
-    },
-    []
-  );
 
   return (
     <div className="pb-14">
@@ -233,15 +217,13 @@ const AddNewTile = () => {
               <div className="pt-[14px]">
                 <AddPhotoSvgEditor
                   onSvgChange={handleSvgChange}
-                  onColorsChange={handleColorsChange}
-                  onPathColorsChange={handlePathColorsChange}
                 />
               </div>
               {/* button  */}
               <div className="pt-10 w-full flex items-center justify-end">
                 <button
                   type="submit"
-                  className="flex items-center gap-2 text-white bg-primary py-4 px-8 text-base font-medium leading-[120%] rounded-[8px]"
+                  className="flex items-center gap-2 text-white bg-primary py-3 px-8 text-base font-medium leading-[120%] rounded-[8px]"
                 >
                   {" "}
                   <Save /> Save tile
