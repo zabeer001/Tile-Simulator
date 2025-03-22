@@ -4,6 +4,8 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import Header from "@/components/shared/Header/header";
 import Footer from "@/components/shared/footer/footer";
+import AppProvider from "@/components/provider/AppProvider";
+import AuthProvider from "@/components/provider/SessionProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,13 +21,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.className} antialiased`}
-      >
-        <Header/>
-        {children}
-        <Toaster position="top-right" />
-        <Footer/>
+      <body className={`${inter.className} antialiased`}>
+        <AuthProvider>
+          <AppProvider>
+            <Header />
+            {children}
+            <Toaster position="top-right" />
+            <Footer />
+          </AppProvider>
+        </AuthProvider>
       </body>
     </html>
   );
