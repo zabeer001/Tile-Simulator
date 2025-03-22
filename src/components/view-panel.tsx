@@ -132,13 +132,15 @@ export default function ViewPanel({
       </div>
 
       {/* Tile Grid */}
-      <div
-        id="tile-grid"
-        className={`grid gap-[2px] bg-${groutColor}`}
-        style={{
-          gridTemplateColumns: `repeat(${gridDimensions}, 1fr)`,
-        }}
-      />
+      <div className="w-full h-[500px]">
+        <div
+          id="tile-grid"
+          className={`grid gap-[2px] bg-${groutColor}`}
+          style={{
+            gridTemplateColumns: `repeat(${gridDimensions}, 1fr)`,
+          }}
+        />
+      </div>
 
       {/* Environment Selection */}
       <div className="space-y-4">
@@ -166,9 +168,8 @@ export default function ViewPanel({
           {["white", "gray", "black"].map((color) => (
             <button
               key={color}
-              className={`w-8 h-8 rounded-full border-2 ${
-                groutColor === color ? "border-primary" : "border-transparent"
-              }`}
+              className={`w-8 h-8 rounded-full border-2 ${groutColor === color ? "border-primary" : "border-transparent"
+                }`}
               style={{ backgroundColor: color }}
               onClick={() => setGroutColor(color as "white" | "gray" | "black")}
             />

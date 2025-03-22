@@ -38,12 +38,13 @@ export const authOptions: NextAuthOptions = {
           }
 
           const data = await res.json();
+          console.log(data)
 
           if (!data.token) {
             throw new Error("Invalid user data received");
           }
 
-          const jwtToken = data.token;
+          const jwtToken = data?.token;
 
           const userResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/user`, {
             headers: {
@@ -69,7 +70,6 @@ export const authOptions: NextAuthOptions = {
             id,
             email,
             name,
-            token: jwtToken, // Store JWT token for later use
           };
         } catch (error) {
           console.error("Authentication error:", error);
@@ -85,7 +85,6 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
-        token.token = user.token; // Store backend token
       }
       return token;
     },
@@ -95,7 +94,6 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id;
         session.user.name = token.name;
         session.user.email = token.email;
-        session.user.token = token.token; // Pass the JWT token to the session
       }
       return session;
     },
