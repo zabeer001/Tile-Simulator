@@ -21,10 +21,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AddPhotoSvgEditor } from "./svg-editor";
 import { toast } from "sonner";
 import { useCallback, useState } from "react";
 import { Save } from "lucide-react";
+import SVGUpload from "./SVGUpload";
 
 const formSchema = z.object({
   name: z.string().min(4, {
@@ -215,10 +215,9 @@ const AddNewTile = () => {
                 Add Photo
               </FormLabel>
               <div className="pt-[14px]">
-                <AddPhotoSvgEditor
-                  onSvgChange={handleSvgChange}
-                />
+                <SVGUpload onUpload={handleSvgChange} />
               </div>
+
               {/* button  */}
               <div className="pt-10 w-full flex items-center justify-end">
                 <button
