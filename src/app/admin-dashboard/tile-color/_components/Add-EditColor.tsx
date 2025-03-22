@@ -338,7 +338,7 @@ function AddEditColor({ color, onCancel, onSave }: AddEditColorProps) {
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Type Title name here..."
+              placeholder="Type Title color name here..."
               className={cn(
                 "border-secondary-300",
                 "placeholder:text-sm placeholder:text-secondary-400 placeholder:leading-[120%] placeholder:font-normal",
