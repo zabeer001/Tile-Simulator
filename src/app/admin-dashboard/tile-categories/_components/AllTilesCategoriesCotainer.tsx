@@ -32,7 +32,21 @@ interface AllTilesCategoriesCotainerProps {
 
 const AllTilesCategoriesCotainer = ({ onEdit }: AllTilesCategoriesCotainerProps) => {
   const [currentPage, setCurrentPage] = useState(1)
-  const columns = createAllTilesCategoriesColumn({ onEdit })
+  const [data, setData] = useState(AllTilesCategoriesData)
+
+  // Handle delete functionality
+  const handleDelete = (category: AllTilesCategoriesDataType) => {
+    // Filter out the deleted category
+    const updatedData = data.filter((item) => item.id !== category.id)
+    setData(updatedData)
+    // You would typically call an API here to delete from the backend
+    console.log(`Deleting category: ${category.CategoriesName}`)
+  }
+
+  const columns = createAllTilesCategoriesColumn({
+    onEdit,
+    onDelete: handleDelete,
+  })
 
   return (
     <section className="w-full">
