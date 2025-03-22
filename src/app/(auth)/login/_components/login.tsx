@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -16,7 +18,7 @@ const formSchema = z.object({
 })
 
 export function LoginForm() {
-//   const router = useRouter()
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -27,8 +29,19 @@ export function LoginForm() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Handle login logic here
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const result = await signIn("credentials", { email: values.email, password: values.password, redirect: false });
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+      console.log("Login successful:", values);
+      router.push("/admin-dashboard");
+    } catch (error) {
+      if(error ){
+        console.error("Login error:", error)
+      }
+    }
     console.log(values)
   }
 
