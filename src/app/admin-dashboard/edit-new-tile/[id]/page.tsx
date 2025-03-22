@@ -1,6 +1,6 @@
 "use client"
 import { useParams } from "next/navigation"
-import { useCallback, useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { AllTilesData } from "../../_components/AllTilesData"
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -10,7 +10,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { AddPhotoSvgEditor } from "../../add-new-tile/_components/svg-editor"
 import { Save } from "lucide-react"
 import { toast } from "sonner"
 
@@ -80,7 +79,7 @@ const EditNewTile = () => {
     },
   })
 
-  console.log({tileData})
+  console.log({ tileData })
 
   // Update form values when tileData changes
   useEffect(() => {
@@ -110,9 +109,9 @@ const EditNewTile = () => {
     console.log("Form data:", formData)
   }
 
-  const handleSvgChange = useCallback((newSvgData: string) => {
-    setSvgData(newSvgData)
-  }, [])
+  // const handleSvgChange = useCallback((newSvgData: string) => {
+  //   setSvgData(newSvgData)
+  // }, [])
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -224,7 +223,7 @@ const EditNewTile = () => {
             <div className="md:grid-cols-1">
               <FormLabel className="text-xl font-semibold text-[#1A1C21] leading-[120%]">Add Photo</FormLabel>
               <div className="pt-[14px]">
-                <AddPhotoSvgEditor onSvgChange={handleSvgChange} initialSvg={svgData} />
+                {/* <AddPhotoSvgEditor onSvgChange={handleSvgChange} initialSvg={svgData} /> */}
               </div>
               {/* button  */}
               <div className="pt-10 w-full flex items-center justify-end">
