@@ -32,7 +32,21 @@ interface AllTilesColorsCotainerProps {
 
 const AllTilesColorsCotainer = ({ onEdit }: AllTilesColorsCotainerProps) => {
   const [currentPage, setCurrentPage] = useState(1)
-  const columns = createAllTilesColorColumn({ onEdit })
+  const [data, setData] = useState(AllTilesColorData)
+
+  // Handle delete functionality
+  const handleDelete = (category: AllTilesColorDataType) => {
+    // Filter out the deleted category
+    const updatedData = data.filter((item) => item.id !== category.id)
+    setData(updatedData)
+    // You would typically call an API here to delete from the backend
+    console.log(`Deleting category: ${category.Name}`)
+  }
+
+  const columns = createAllTilesColorColumn({
+    onEdit,
+    onDelete: handleDelete,
+  })
 
   return (
     <section className="w-full">
