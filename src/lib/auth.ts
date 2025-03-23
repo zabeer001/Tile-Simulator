@@ -70,6 +70,7 @@ export const authOptions: NextAuthOptions = {
             id,
             email,
             name,
+            token: jwtToken,
           };
         } catch (error) {
           console.error("Authentication error:", error);
@@ -85,6 +86,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
+        token.accessToken = user.token;
       }
       return token;
     },
@@ -94,8 +96,10 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id;
         session.user.name = token.name;
         session.user.email = token.email;
+        session.user.token = token.accessToken;
       }
       return session;
+      console.log({session})
     },
   },
 };

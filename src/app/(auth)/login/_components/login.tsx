@@ -10,6 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -18,6 +19,8 @@ const formSchema = z.object({
 })
 
 export function LoginForm() {
+  //eslint-disable-next-line
+  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -101,8 +104,8 @@ export function LoginForm() {
             </Link>
           </div>
 
-          <Button type="submit" className="w-full bg-red-500 hover:bg-red-600">
-            Login
+          <Button disabled={isLoading} type="submit" className="w-full bg-red-500 hover:bg-red-600">
+            {isLoading ? "Please wait..." : "Login"}
           </Button>
         </form>
       </Form>
