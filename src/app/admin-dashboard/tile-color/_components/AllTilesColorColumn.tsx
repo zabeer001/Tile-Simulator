@@ -36,7 +36,8 @@ export const createAllTilesColorColumn = ({ onEdit, onDelete }: ColumnProps): Co
     cell: ({ row }) => {
       return (
         <div className="flex justify-center items-center gap-[2px]">
-          <span className="text-base font-normal text-black leading-[120%] text-center">{row.original.Name}</span>
+          <span className="text-base font-normal text-black leading-[120%] text-center">{row.original?.name}</span>
+
         </div>
       )
     },
@@ -44,20 +45,20 @@ export const createAllTilesColorColumn = ({ onEdit, onDelete }: ColumnProps): Co
   {
     header: "Preview",
     cell: ({ row }) => {
-      const isColor = row.original.imageOrColor?.startsWith("#")
+      const isColor = row.original.code?.startsWith("#")
 
       return (
         <div className="flex justify-center items-center">
           {isColor ? (
             <div
               className="w-12 h-12 rounded-md border border-gray-300"
-              style={{ backgroundColor: row.original.imageOrColor || "#ccc" }}
+              style={{ backgroundColor: row.original.code || "#ccc" }}
             />
           ) : (
             <div className="w-12 h-12 rounded-md overflow-hidden">
               <Image
-                src={row.original.imageOrColor || "/placeholder.svg"}
-                alt={row.original.Name}
+                src={row.original.image ? `/${row.original.image}`: "/placeholder.svg"}
+                alt={row.original.name}
                 width={48}
                 height={48}
                 className="object-cover w-full h-full"
@@ -71,7 +72,7 @@ export const createAllTilesColorColumn = ({ onEdit, onDelete }: ColumnProps): Co
   {
     header: "Type",
     cell: ({ row }) => {
-      const isColor = row.original.imageOrColor?.startsWith("#")
+      const isColor = row.original.image?.startsWith("#")
       return (
         <div className="flex justify-center items-center gap-[2px]">
           <span className="text-base font-normal text-black leading-[120%] text-center">
@@ -84,9 +85,19 @@ export const createAllTilesColorColumn = ({ onEdit, onDelete }: ColumnProps): Co
   {
     header: "Date",
     cell: ({ row }) => {
+      const dateString = row.original.updated_at;
+      const date = new Date(dateString); // Parse the string into a Date object
+
+      // Format the Date object
+      const formattedDate = date.toLocaleString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric',
+        hour: '2-digit'
+      });
+
+
       return (
         <div className="flex justify-center items-center gap-[2px]">
-          <span className="text-base font-normal text-black leading-[120%] text-center">{row.original.Date}</span>
+          <span className="text-base font-normal text-black leading-[120%] text-center">{formattedDate}</span>
         </div>
       )
     },
