@@ -44,6 +44,8 @@ export const  authOptions: NextAuthOptions = {
             throw new Error("Invalid user data received");
           }
 
+
+
           const jwtToken = data?.token;
 
           const userResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/user`, {
@@ -99,7 +101,6 @@ export const  authOptions: NextAuthOptions = {
         session.user.token = token.accessToken;
       }
       return session;
-      console.log({session})
     },
   },
 };

@@ -1,39 +1,94 @@
 "use client"
 
 import { useState } from "react"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Trash2 } from "lucide-react"
 import { FiEdit } from "react-icons/fi"
 import type { AllTilesColorDataType } from "./AllTilesColorData"
 import { DeleteConfirmationColorModal } from "./DeleteConfirmationModal"
+import { useSession } from "next-auth/react"
 
 interface ActionsButtonProps {
   row: {
     original: AllTilesColorDataType
   }
   onEdit: (color: AllTilesColorDataType) => void
-  onDelete?: (color: AllTilesColorDataType) => void
 }
 
-function ActionsButton({ row, onEdit, onDelete }: ActionsButtonProps) {
+function ActionsButton({ row, onEdit }: ActionsButtonProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const queryClient = useQueryClient()
+  const { data: session } = useSession()
+  const token = (session?.user as { token?: string })?.token
+
+  const deleteColor = async (id: number) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/colors/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+  
+      console.log("Delete Response Status:", response.status)
+  
+      if (!response.ok) {
+        const errorMessage = await response.text() // Get error details
+        throw new Error(`Failed to delete color: ${errorMessage}`)
+      }
+  
+      // If response is 204 No Content, exit early
+      if (response.status === 204) {
+        console.log("Delete successful, no response body.")
+        return
+      }
+  
+      // Attempt to parse JSON only if content exists
+      const contentType = response.headers.get("content-type")
+      if (contentType && contentType.includes("application/json")) {
+        const responseData = await response.json()
+        console.log("Delete Response Data:", responseData)
+      }
+    } catch (error) {
+      console.error("Error in deleteColor:", error)
+      throw error
+    }
+  }
+  
+  
+
+  const mutation = useMutation({
+    mutationFn: () => deleteColor(row.original.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["colors"] }) // Refresh the color list
+      setShowDeleteModal(false)
+    },
+    onError: (error) => {
+      console.error("Error deleting color:", error)
+    },
+  })
 
   const handleEdit = () => {
-    if (onEdit) {
-      onEdit(row.original)
-    }
+    onEdit(row.original)
   }
 
   const handleDeleteClick = () => {
     setShowDeleteModal(true)
   }
 
-  const handleDeleteConfirm = () => {
-    if (onDelete) {
-      onDelete(row.original)
-      console.log("Deleted item:", row.original.Name)
+  const handleDeleteConfirm = async () => {
+    try {
+      await mutation.mutateAsync() // Wait for delete to complete
+      console.log("Item deleted successfully")
+    } catch (error) {
+      console.error("Failed to delete item:", error)
     }
-    setShowDeleteModal(false)
   }
+  
 
   const handleDeleteCancel = () => {
     setShowDeleteModal(false)
@@ -44,19 +99,22 @@ function ActionsButton({ row, onEdit, onDelete }: ActionsButtonProps) {
       <button onClick={handleEdit}>
         <FiEdit className="w-5 h-5" />
       </button>
-      <button onClick={handleDeleteClick} className="hover:text-red-600">
+      <button
+        onClick={handleDeleteClick}
+        className="hover:text-red-600"
+        disabled={!token} // Disable if no token
+      >
         <Trash2 className="w-5 h-5" />
       </button>
 
       <DeleteConfirmationColorModal
         isOpen={showDeleteModal}
         onClose={handleDeleteCancel}
-        onConfirm={handleDeleteConfirm}
-        itemName={row.original.Name}
+        onConfirm={handleDeleteConfirm} // Pass async function
+        itemName={row.original.name}
       />
     </div>
   )
 }
 
 export default ActionsButton
-

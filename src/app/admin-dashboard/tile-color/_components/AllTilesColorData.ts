@@ -1,9 +1,9 @@
 export type AllTilesColorDataType = {
   id: number
   name: string
-  image: string
+  code: string | null
+  image: string | null
   updated_at: string
-  code?: string
   data?: object[]
 }
 
