@@ -36,7 +36,7 @@ export const createAllTilesCategoriesColumn = ({ onEdit, onDelete }: ColumnProps
       return (
         <div className="flex justify-center items-center gap-[2px]">
           <span className="text-base font-normal text-black leading-[120%] text-center">
-            {row.original.CategoriesName}
+            {row.original.name}
           </span>
         </div>
       )
@@ -55,9 +55,17 @@ export const createAllTilesCategoriesColumn = ({ onEdit, onDelete }: ColumnProps
   {
     header: "Date",
     cell: ({ row }) => {
+      const dateString = row.original.updated_at;
+      const date = new Date(dateString); // Parse the string into a Date object
+
+      // Format the Date object
+      const formattedDate = date.toLocaleString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric',
+        hour: '2-digit'
+      });
       return (
         <div className="flex justify-center items-center gap-[2px]">
-          <span className="text-base font-normal text-black leading-[120%] text-center">{row.original.Date}</span>
+          <span className="text-base font-normal text-black leading-[120%] text-center">{formattedDate}</span>
         </div>
       )
     },

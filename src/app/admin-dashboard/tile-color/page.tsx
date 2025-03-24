@@ -3,10 +3,10 @@
 import { useState } from "react"
 import AllTilesColorHeader from "./_components/AllTilesColorHeader"
 import AllTilesColorsCotainer from "./_components/AllTilesColorContainer"
-import AddEditColor from "./_components/Add-EditColor"
 import {  type AllTilesColorDataType } from "./_components/AllTilesColorData"
 import { useQuery } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
+import AddEditColor from "./_components/Add-Edit-colorForm/add-edit-colorForm"
 
 const TileColors = () => {
   const [isAddingOrEditing, setIsAddingOrEditing] = useState(false)
@@ -14,7 +14,7 @@ const TileColors = () => {
 
   const session = useSession();
   const token = (session?.data?.user as { token: string })?.token;
-  console.log(token)
+  // console.log(token)
 
   const handleAddNew = () => {
     setSelectedColor(null)
@@ -32,10 +32,11 @@ const TileColors = () => {
   }
 
   const handleSave = (color: AllTilesColorDataType) => {
-    console.log(color); // Use the color value
-    setIsAddingOrEditing(false)
-    setSelectedColor(null)
-  }
+    setIsAddingOrEditing(false);
+    setSelectedColor(null);
+    const updatedColor = { ...color, image: color.image ?? "" }; // Ensure `image` is always a string
+    console.log(updatedColor);
+  };
 
 
   const { data, isLoading, isError, error } = useQuery<any>({
