@@ -15,25 +15,35 @@ import { Button } from "@/components/ui/button"
 interface DeleteConfirmationModalProps {
   isOpen: boolean
   onClose: () => void
-  onConfirm: () => void
+  onConfirm: () => Promise<void> // Ensure onConfirm is async to handle API calls
   itemName: string
 }
 
 export function DeleteConfirmationColorModal({ isOpen, onClose, onConfirm, itemName }: DeleteConfirmationModalProps) {
   const [open, setOpen] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
     setOpen(isOpen)
   }, [isOpen])
 
-  const handleConfirm = () => {
-    onConfirm()
-    setOpen(false)
+  const handleConfirm = async () => {
+    try {
+      setIsDeleting(true)
+      await onConfirm() // Wait for the delete operation to complete
+      setOpen(false)
+    } catch (error) {
+      console.error("Error deleting:", error)
+    } finally {
+      setIsDeleting(false)
+    }
   }
 
   const handleClose = () => {
-    onClose()
-    setOpen(false)
+    if (!isDeleting) {
+      onClose()
+      setOpen(false)
+    }
   }
 
   return (
@@ -50,15 +60,14 @@ export function DeleteConfirmationColorModal({ isOpen, onClose, onConfirm, itemN
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex gap-2 sm:justify-end">
-          <Button variant="outline" onClick={handleClose}>
+          <Button variant="outline" onClick={handleClose} disabled={isDeleting}>
             Cancel
           </Button>
-          <Button variant="destructive" onClick={handleConfirm}>
-            Yes, Delete
+          <Button variant="destructive" onClick={handleConfirm} disabled={isDeleting}>
+            {isDeleting ? "Deleting..." : "Yes, Delete"}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   )
 }
-
