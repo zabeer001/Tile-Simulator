@@ -11,7 +11,7 @@ interface ColumnProps {
   onDelete: (color: AllTilesColorDataType) => void
 }
 
-export const createAllTilesColorColumn = ({ onEdit, onDelete }: ColumnProps): ColumnDef<AllTilesColorDataType>[] => [
+export const createAllTilesColorColumn = ({ onEdit}: ColumnProps): ColumnDef<AllTilesColorDataType>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -107,7 +107,7 @@ export const createAllTilesColorColumn = ({ onEdit, onDelete }: ColumnProps): Co
     cell: ({ row }) => {
       return (
         <div>
-          <ActionsButton row={row} onEdit={onEdit} onDelete={onDelete} />
+          <ActionsButton row={row} onEdit={onEdit} />
         </div>
       )
     },

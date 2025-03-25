@@ -12,7 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
-import type { AllTilesCategoriesDataType } from "./AllTilesCategoriesData"
+import { AllTilesCategory } from "./AllTilesCategoriesData"
 
 const API_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories`
 
@@ -24,7 +24,7 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>
 
 interface AddTileEditCategoriesProps {
-  category: AllTilesCategoriesDataType | null
+  category: AllTilesCategory | null
   onCancel: () => void
 }
 

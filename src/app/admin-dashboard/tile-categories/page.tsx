@@ -4,20 +4,20 @@ import { useState } from "react"
 import AllTilesCategoriesHeader from "./_components/AllTilesCategoriesHeader"
 import AllTilesCategoriesCotainer from "./_components/AllTilesCategoriesCotainer"
 import AddTileEditAndAddCategories from "./_components/AllTilesEdit-addCategories"
-import type { AllTilesCategoriesDataType } from "./_components/AllTilesCategoriesData"
+import type {  AllTilesCategoriesResponse, AllTilesCategory } from "./_components/AllTilesCategoriesData"
 import { useQuery } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
 
 const TileCategories = () => {
   const [isAddingOrEditing, setIsAddingOrEditing] = useState(false)
-  const [selectedCategory, setSelectedCategory] = useState<AllTilesCategoriesDataType | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<AllTilesCategory | null>(null)
 
   const handleAddNew = () => {
     setSelectedCategory(null)
     setIsAddingOrEditing(true)
   }
 
-  const handleEdit = (category: AllTilesCategoriesDataType) => {
+  const handleEdit = (category: AllTilesCategory) => {
     setSelectedCategory(category)
     setIsAddingOrEditing(true)
   }
@@ -32,7 +32,7 @@ const TileCategories = () => {
   const token = (session?.data?.user as { token: string })?.token;
   console.log(token)
 
-  const { data, isLoading, isError, error } = useQuery<any>({
+  const { data, isLoading, isError, error } = useQuery<AllTilesCategoriesResponse>({
     queryKey: ['allTilesCategories'],
     queryFn: async () => {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories`, {
@@ -47,7 +47,7 @@ const TileCategories = () => {
     },
   });
 
-  // console.log(data.data)
+  console.log(data);
 
   return (
     <div>
