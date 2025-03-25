@@ -36,7 +36,7 @@ export default function AddTileEditAndAddCategories({ category, onCancel }: AddT
     resolver: zodResolver(formSchema),
     defaultValues: {
       categoryName: category ? category.name : "",
-      description: category ? category?.description || "" : "",
+      description: category ? category?.Description || "" : "",
     },
   })
 

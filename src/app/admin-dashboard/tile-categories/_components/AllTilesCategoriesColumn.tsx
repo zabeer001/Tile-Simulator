@@ -47,7 +47,7 @@ export const createAllTilesCategoriesColumn = ({ onEdit, onDelete }: ColumnProps
     cell: ({ row }) => {
       return (
         <div className="flex justify-center items-center gap-[2px]">
-          <span className="text-base font-normal text-black leading-[120%] text-center">{row.original.Count}</span>
+          <span className="text-base font-normal text-black leading-[120%] text-center">{row.original.count}</span>
         </div>
       )
     },
