@@ -1,9 +1,9 @@
 export type AllTilesCategoriesDataType = {
     id: number;
     name: string;
-    Count: number;
+    count: number;
     updated_at: string;
-    description: string
+    Description: string
 };
 
 // export const AllTilesCategoriesData: AllTilesCategoriesDataType[] = [
