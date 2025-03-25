@@ -2,15 +2,14 @@
 
 import { Checkbox } from "@/components/ui/checkbox"
 import type { ColumnDef } from "@tanstack/react-table"
-import type { AllTilesCategoriesDataType } from "./AllTilesCategoriesData"
 import ActionsButton from "./ActionsButton"
+import { AllTilesCategory } from "./AllTilesCategoriesData"
 
 interface ColumnProps {
-  onEdit: (category: AllTilesCategoriesDataType) => void
-  onDelete: (color: AllTilesCategoriesDataType) => void
+  onEdit: (category: AllTilesCategory) => void
 }
 
-export const createAllTilesCategoriesColumn = ({ onEdit, onDelete }: ColumnProps): ColumnDef<AllTilesCategoriesDataType>[] => [
+export const createAllTilesCategoriesColumn = ({ onEdit }: ColumnProps): ColumnDef< AllTilesCategory>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -52,30 +51,30 @@ export const createAllTilesCategoriesColumn = ({ onEdit, onDelete }: ColumnProps
       )
     },
   },
-  {
-    header: "Date",
-    cell: ({ row }) => {
-      const dateString = row.original.updated_at;
-      const date = new Date(dateString); // Parse the string into a Date object
+  // {
+  //   header: "Date",
+  //   cell: ({ row }) => {
+  //     const dateString = row.original.updated_at;
+  //     const date = new Date(dateString); // Parse the string into a Date object
 
-      // Format the Date object
-      const formattedDate = date.toLocaleString('en-US', {
-        year: 'numeric', month: 'long', day: 'numeric',
-        hour: '2-digit'
-      });
-      return (
-        <div className="flex justify-center items-center gap-[2px]">
-          <span className="text-base font-normal text-black leading-[120%] text-center">{formattedDate}</span>
-        </div>
-      )
-    },
-  },
+  //     // Format the Date object
+  //     const formattedDate = date.toLocaleString('en-US', {
+  //       year: 'numeric', month: 'long', day: 'numeric',
+  //       hour: '2-digit'
+  //     });
+  //     return (
+  //       <div className="flex justify-center items-center gap-[2px]">
+  //         <span className="text-base font-normal text-black leading-[120%] text-center">{formattedDate}</span>
+  //       </div>
+  //     )
+  //   },
+  // },
   {
     header: "Actions",
     cell: ({ row }) => {
       return (
         <div>
-          <ActionsButton row={row} onEdit={onEdit} onDelete={onDelete}/>
+          <ActionsButton row={row} onEdit={onEdit}/>
         </div>
       )
     },

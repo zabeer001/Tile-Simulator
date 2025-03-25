@@ -4,12 +4,12 @@ import { useState } from "react"
 import { type ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { DataTable } from "@/components/ui/data-table"
 import TilePagination from "@/components/ui/TilePagination"
-import { AllTilesCategoriesDataType } from "./AllTilesCategoriesData"
 import { createAllTilesCategoriesColumn } from "./AllTilesCategoriesColumn"
+import { AllTilesCategory } from "./AllTilesCategoriesData"
 
 interface TableContainerProps {
-  data: AllTilesCategoriesDataType[]
-  columns: ColumnDef<AllTilesCategoriesDataType>[]
+  data: AllTilesCategory[]
+  columns: ColumnDef<AllTilesCategory>[]
 }
 
 const TableContainer = ({ data, columns }: TableContainerProps) => {
@@ -28,29 +28,20 @@ const TableContainer = ({ data, columns }: TableContainerProps) => {
 
 
 interface AllTilesCategoriesCotainerProps {
-  onEdit: (category: AllTilesCategoriesDataType) => void
-  data: AllTilesCategoriesDataType[] | undefined
+  onEdit: (category: AllTilesCategory) => void
+  data: AllTilesCategory[] | undefined
   isLoading: boolean
   isError: boolean
   error: unknown
 }
 
-const AllTilesCategoriesCotainer = ({ onEdit, data, isLoading, isError, error}: AllTilesCategoriesCotainerProps) => {
+const AllTilesCategoriesCotainer = ({ onEdit, data, isLoading, isError, error }: AllTilesCategoriesCotainerProps) => {
   const [currentPage, setCurrentPage] = useState(1)
-  // const [data, setData] = useState(AllTilesCategoriesData)
 
-  // Handle delete functionality 
-  const handleDelete = (category: AllTilesCategoriesDataType) => {
-    // Filter out the deleted category
-    // const updatedData = data?.filter((item) => item.id !== category.id)
-    // setData(updatedData)
-    // You would typically call an API here to delete from the backend
-    console.log(`Deleting category: ${category.name}`)
-  }
+
 
   const columns = createAllTilesCategoriesColumn({
     onEdit,
-    onDelete: handleDelete,
   })
 
   let content;

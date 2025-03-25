@@ -2,16 +2,16 @@
 
 import { Trash2 } from "lucide-react"
 import { FiEdit } from "react-icons/fi"
-import type { AllTilesCategoriesDataType } from "./AllTilesCategoriesData"
 import { DeleteConfirmationCategoriesModal } from "./DeleteConfirmationCategoriesModal"
 import { useState } from "react"
+import {  AllTilesCategory } from "./AllTilesCategoriesData"
 
 interface ActionsButtonProps {
   row: {
-    original: AllTilesCategoriesDataType
+    original: AllTilesCategory
   }
-  onEdit: (category: AllTilesCategoriesDataType) => void
-  onDelete?: (color: AllTilesCategoriesDataType) => void
+  onEdit: (category: AllTilesCategory) => void
+  onDelete?: (color: AllTilesCategory) => void
 }
 
 function ActionsButton({ row, onEdit, onDelete }: ActionsButtonProps) {
@@ -26,7 +26,7 @@ function ActionsButton({ row, onEdit, onDelete }: ActionsButtonProps) {
   const handleDeleteConfirm = () => {
     if (onDelete) {
       onDelete(row.original)
-      console.log("Deleted item:", row.original.CategoriesName)
+      console.log("Deleted item:", row.original.name)
     }
     setShowDeleteModal(false)
   }
@@ -45,7 +45,7 @@ function ActionsButton({ row, onEdit, onDelete }: ActionsButtonProps) {
         isOpen={showDeleteModal}
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
-        itemName={row.original.CategoriesName}
+        itemName={row.original.name}
       />
     </div>
   )

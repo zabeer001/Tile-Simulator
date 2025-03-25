@@ -27,6 +27,7 @@ import { Save } from "lucide-react";
 import SVGUpload from "./SVGUpload";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import { AllTilesCategoriesResponse, AllTilesCategory } from "../../tile-categories/_components/AllTilesCategoriesData";
 
 const formSchema = z.object({
   name: z.string().min(4, {
@@ -64,7 +65,7 @@ const AddNewTile = () => {
   const token = (session?.data?.user as { token: string })?.token;
   console.log(token)
 
-  const { data } = useQuery<any>({
+  const { data } = useQuery<AllTilesCategoriesResponse>({
     queryKey: ['allTilesCategories'],
     queryFn: async () => {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories`, {
@@ -79,7 +80,7 @@ const AddNewTile = () => {
     },
   });
 
-  
+
 
   const onSubmit = (data: FormValues) => {
     const formData = {
@@ -169,7 +170,7 @@ const AddNewTile = () => {
                               <SelectValue placeholder="Select a category" />
                             </SelectTrigger>
                             <SelectContent>
-                              {data?.data?.map((item: { id: string, name: string }) => (
+                              {data?.data?.map((item: AllTilesCategory) => (
                                 <SelectItem key={item.id} value={item.name}>
                                   {item.name}
                                 </SelectItem>

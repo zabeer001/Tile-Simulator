@@ -103,7 +103,7 @@ const SVGUpload = ({ onUpload }: SVGUploadProps) => {
             {/* Status indicator */}
             <div className="absolute top-2 right-2">
               {uploadStatus === "success" ? (
-                <div className="">
+                <div className="bg-green-500 text-white p-1 rounded-full">
                   {/* <Check size={16} /> */}
                 </div>
               ) : uploadStatus === "error" ? (
@@ -132,10 +132,6 @@ const SVGUpload = ({ onUpload }: SVGUploadProps) => {
           )}
         </div>
       ) : (
-        <div className="flex flex-col items-center">
-          <UploadCloud className="h-10 w-10 text-gray-500" />
-          <p className="text-gray-600">Drag and drop SVG here, or click to upload</p>
-          <button type="button" className="bg-red-500 text-white px-4 py-2 mt-3 rounded-md">Add Image</button>
         <div className="flex flex-col items-center text-center">
           <div className={`p-4 rounded-full mb-4 ${isDragActive ? "bg-primary/10" : "bg-gray-100"}`}>
             <UploadCloud className={`h-10 w-10 ${isDragActive ? "text-primary" : "text-gray-500"}`} />
