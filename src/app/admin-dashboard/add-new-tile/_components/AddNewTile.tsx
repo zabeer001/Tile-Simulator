@@ -25,6 +25,8 @@ import { toast } from "sonner";
 import { useCallback, useState } from "react";
 import { Save } from "lucide-react";
 import SVGUpload from "./SVGUpload";
+import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
   name: z.string().min(4, {
@@ -43,22 +45,6 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const categoryData = [
-  "Pattern Collection",
-  "6x6 Collection",
-  "Hexagon Collection",
-  "Border Collection",
-  "On-Demand Collection",
-  "Elite Collection",
-  "Mini Hexagon Collection",
-  "4x4 Collection",
-  "Scale",
-  "Arabesque",
-  "Lola",
-  "Triangle",
-  "Rectangle 4x8",
-  "Rectangle 2x8",
-];
 const gridSelectionData = ["1x1", "2x2"];
 
 const AddNewTile = () => {
@@ -73,6 +59,27 @@ const AddNewTile = () => {
       gridSelection: "",
     },
   });
+
+  const session = useSession();
+  const token = (session?.data?.user as { token: string })?.token;
+  console.log(token)
+
+  const { data } = useQuery<any>({
+    queryKey: ['allTilesCategories'],
+    queryFn: async () => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      })
+      if (!res.ok) throw new Error("Failed to fetch tile colors")
+      return res.json()
+    },
+  });
+
+  
 
   const onSubmit = (data: FormValues) => {
     const formData = {
@@ -162,9 +169,9 @@ const AddNewTile = () => {
                               <SelectValue placeholder="Select a category" />
                             </SelectTrigger>
                             <SelectContent>
-                              {categoryData.map((item) => (
-                                <SelectItem key={item} value={item}>
-                                  {item}
+                              {data?.data?.map((item: { id: string, name: string }) => (
+                                <SelectItem key={item.id} value={item.name}>
+                                  {item.name}
                                 </SelectItem>
                               ))}
                             </SelectContent>
