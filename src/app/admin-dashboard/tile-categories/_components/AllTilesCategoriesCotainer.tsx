@@ -42,7 +42,7 @@ const AllTilesCategoriesCotainer = ({ onEdit, data, isLoading, isError, error}: 
   // Handle delete functionality 
   const handleDelete = (category: AllTilesCategoriesDataType) => {
     // Filter out the deleted category
-    const updatedData = data?.filter((item) => item.id !== category.id)
+    // const updatedData = data?.filter((item) => item.id !== category.id)
     // setData(updatedData)
     // You would typically call an API here to delete from the backend
     console.log(`Deleting category: ${category.name}`)
@@ -55,7 +55,7 @@ const AllTilesCategoriesCotainer = ({ onEdit, data, isLoading, isError, error}: 
 
   let content;
   if (isLoading) {
-    content = <p>Loading...</p>
+    content = <p className="text-center py-5">Loading...</p>
   } else if (isError) {
     content = <p>Error: {String(error)}</p>
   } else {
