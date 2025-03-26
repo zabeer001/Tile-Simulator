@@ -69,6 +69,8 @@ const TileColors = () => {
     per_page: 10,
   }
 
+  console.log(pagination)
+
   return (
     <div>
       {!isAddingOrEditing && <AllTilesColorHeader onAddNew={handleAddNew} />}
@@ -91,4 +93,3 @@ const TileColors = () => {
 }
 
 export default TileColors
-

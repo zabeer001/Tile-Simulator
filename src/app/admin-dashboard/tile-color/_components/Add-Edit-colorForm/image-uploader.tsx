@@ -1,11 +1,8 @@
 "use client"
 
 import type React from "react"
-
 import { useRef, useState } from "react"
-import Image from "next/image"
 import { ImageIcon } from "lucide-react"
-import { generateFullUrl } from "@/lib/generateFullUrl"
 
 interface ImageUploaderProps {
   selectedImage: string | null
@@ -15,7 +12,7 @@ interface ImageUploaderProps {
 
 export function ImageUploader({ selectedImage, onImageChange, previousImage }: ImageUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
 
   console.log(imagePreview)
 
@@ -26,9 +23,9 @@ export function ImageUploader({ selectedImage, onImageChange, previousImage }: I
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      // Only store the file name, not the full URL
-      onImageChange(file.name) // Pass the file object
-      setImagePreview(null) // Optionally, clear previous preview
+      const imageName = file.name
+      onImageChange(imageName) // Store just the file name
+      setImagePreview(null) // Clear any previous preview
     }
   }
 
@@ -36,9 +33,9 @@ export function ImageUploader({ selectedImage, onImageChange, previousImage }: I
     e.preventDefault()
     const file = e.dataTransfer.files?.[0]
     if (file) {
-
-      const imageUrl = URL.createObjectURL(file)
-      onImageChange(imageUrl)
+      const imageName = file.name
+      onImageChange(imageName) // Store just the file name
+      setImagePreview(null) // Clear any previous preview
     }
   }
 
@@ -55,13 +52,9 @@ export function ImageUploader({ selectedImage, onImageChange, previousImage }: I
         onDragOver={handleDragOver}
       >
         {selectedImage ? (
-          <Image
-            src={selectedImage || "/placeholder.svg"}
-            alt="Selected"
-            width={100}
-            height={100}
-            className="object-contain"
-          />
+          <div className="flex items-center justify-center w-[100px] h-[100px] bg-gray-100 border rounded-md">
+            <p className="text-sm text-gray-500">{selectedImage}</p> {/* Show the image name */}
+          </div>
         ) : (
           <>
             <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mb-2">
@@ -77,18 +70,11 @@ export function ImageUploader({ selectedImage, onImageChange, previousImage }: I
       {previousImage && (
         <div className="flex items-center gap-2 mt-4">
           <div className="w-12 h-12 border border-gray-300 rounded-md overflow-hidden">
-            <Image
-              src={generateFullUrl(previousImage) || "/placeholder.svg"}
-              alt="Previous"
-              width={48}
-              height={48}
-              className="object-cover w-full h-full"
-            />
+            <p className="text-xs text-gray-500">Previous image</p>
+            <div className="text-xs">{previousImage}</div> {/* Display previous image file name */}
           </div>
-          <span className="text-xs text-gray-500">Previous image</span>
         </div>
       )}
     </div>
   )
 }
-

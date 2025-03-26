@@ -19,23 +19,28 @@ const SVGUpload = ({ onUpload }: SVGUploadProps) => {
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0]
       if (file) {
+        if (file.size > 500000) { // Example limit of 500 KB
+          alert("File size exceeds 500 KB. Please upload a smaller SVG file.");
+          return;
+        }
+  
         setFileName(file.name)
         setUploadStatus("idle")
-
+  
         const reader = new FileReader()
         reader.onload = (event) => {
           if (event.target?.result) {
             try {
               const svgData = event.target.result as string
-
-              // Basic validation to ensure it's an SVG
-              if (!svgData.includes("<svg")) {
+  
+              // Comprehensive SVG validation
+              if (!svgData.includes("<svg") || !svgData.includes("</svg>")) {
                 throw new Error("Not a valid SVG file")
               }
-
+  
               setPreview(svgData)
               setUploadStatus("success")
-
+  
               if (typeof onUpload === "function") {
                 onUpload(svgData)
               } else {
@@ -48,16 +53,18 @@ const SVGUpload = ({ onUpload }: SVGUploadProps) => {
             }
           }
         }
-
+  
         reader.onerror = () => {
           setUploadStatus("error")
         }
-
+  
         reader.readAsText(file)
       }
     },
     [onUpload],
   )
+  
+  
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { "image/svg+xml": [".svg"] },
