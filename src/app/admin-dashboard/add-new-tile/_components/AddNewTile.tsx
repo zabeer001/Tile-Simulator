@@ -130,23 +130,23 @@ const AddNewTile = () => {
       form.reset()
       setSvgData("")
     },
-    onError: (error: any) => {
-      if (error?.response?.data?.errors) {
-        // Iterate over all the errors and display them in the toast
-        Object.entries(error.response.data.errors).forEach(([field, messages]) => {
-          // Type assertion to tell TypeScript that messages is an array of strings
-          (messages as string[]).forEach((message: string) => {
-            toast.error(`${field}: ${message}`, {
-              description: `There was an issue with the ${field} field.`,
-            })
-          })
-        })
-      } else {
-        toast.error("Failed to create tile", {
-          description: error.message || "Please try again later",
-        })
-      }
-    },
+    // onError: (error: any) => {
+    //   if (error?.response?.data?.errors) {
+    //     // Iterate over all the errors and display them in the toast
+    //     Object.entries(error.response.data.errors).forEach(([field, messages]) => {
+    //       // Type assertion to tell TypeScript that messages is an array of strings
+    //       (messages as string[]).forEach((message: string) => {
+    //         toast.error(`${field}: ${message}`, {
+    //           description: `There was an issue with the ${field} field.`,
+    //         })
+    //       })
+    //     })
+    //   } else {
+    //     toast.error("Failed to create tile", {
+    //       description: error.message || "Please try again later",
+    //     })
+    //   }
+    // },
 
   })
 
