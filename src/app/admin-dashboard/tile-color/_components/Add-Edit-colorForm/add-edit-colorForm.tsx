@@ -1,9 +1,7 @@
 "use client"
 
-import { AllTilesColorDataType } from "../AllTilesColorData"
+import type { AllTilesColorDataType } from "../AllTilesColorData"
 import { ColorForm } from "./color-form"
-
-
 
 interface AddEditColorProps {
   color: AllTilesColorDataType | null

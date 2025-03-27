@@ -37,7 +37,6 @@ export const createAllTilesColorColumn = ({ onEdit}: ColumnProps): ColumnDef<All
       return (
         <div className="flex justify-center items-center gap-[2px]">
           <span className="text-base font-normal text-black leading-[120%] text-center">{row.original?.name}</span>
-
         </div>
       )
     },
