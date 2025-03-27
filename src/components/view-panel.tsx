@@ -1,8 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
+import { Tabs, TabsContent } from "@/components/ui/tabs"
 import type { SvgData } from "@/components/svg-editor/types"
+import Image from "next/image"
+import Link from "next/link"
 
 interface Props {
   currentSvg: SvgData[] | null
@@ -18,24 +21,31 @@ export default function ViewPanel({
   rotations = [0, 0, 0, 0],
 }: Props) {
   const [gridSize, setGridSize] = useState<"8x8" | "12x12">("8x8")
-  const [environment, setEnvironment] = useState<"residential" | "commercial">("residential")
+  const [environment, setEnvironment] = useState<"bedroom" | "bathroom" | "kitchen" | "commercial">("bedroom")
   const [groutColor, setGroutColor] = useState<"white" | "gray" | "black">("white")
   const [groutThickness, setGroutThickness] = useState<"none" | "thin" | "thick">("thin")
+  const tileGridRef = useRef<HTMLDivElement>(null)
+  const [showTilePreview, setShowTilePreview] = useState(true)
 
   // Calculate grid dimensions based on selected size
   const gridDimensions = gridSize === "8x8" ? 8 : 12
 
-  // Add a function to create a rotation indicator for each SVG in the view panel
+  // Define the tile area for each environment
+  // const tileAreas = {
+  //   bedroom: { top: "60%", left: "10%", width: "40%", height: "40%" },
+  //   bathroom: { top: "20%", left: "30%", width: "40%", height: "60%" },
+  //   kitchen: { top: "70%", left: "20%", width: "60%", height: "30%" },
+  //   commercial: { top: "70%", left: "30%", width: "40%", height: "30%" },
+  // }
+
+  // Update grid when SVG or settings change
   useEffect(() => {
-    if (!currentSvg || !currentSvg.length) return
+    if (!currentSvg || !currentSvg.length || !tileGridRef.current) return
 
     console.log("[VIEW PANEL] Rotations:", rotations)
 
-    // Update grid when SVG or settings change
-    const container = document.getElementById("tile-grid")
-    if (!container) return
-
     // Clear existing grid
+    const container = tileGridRef.current
     container.innerHTML = ""
 
     // Determine if we should use a 2x2 pattern (for 4 SVGs)
@@ -120,74 +130,212 @@ export default function ViewPanel({
   }, [currentSvg, pathColors, showBorders, rotations, gridSize, groutColor, groutThickness, gridDimensions])
 
   return (
-    <div className="p-4 space-y-6">
-      {/* Grid Size Controls */}
-      <div className="flex gap-2">
-        <Button variant={gridSize === "8x8" ? "default" : "outline"} onClick={() => setGridSize("8x8")}>
-          8x8
-        </Button>
-        <Button variant={gridSize === "12x12" ? "default" : "outline"} onClick={() => setGridSize("12x12")}>
-          12x12
-        </Button>
-      </div>
+    <div className="p-4 space-y-6 h-full">
+      <Tabs defaultValue="room-view" className="w-full">
 
-      {/* Tile Grid */}
-      <div className="w-full h-[500px]">
-        <div
-          id="tile-grid"
-          className={`grid gap-[2px] bg-${groutColor}`}
-          style={{
-            gridTemplateColumns: `repeat(${gridDimensions}, 1fr)`,
-          }}
-        />
-      </div>
+        <TabsContent value="room-view" >
 
-      {/* Environment Selection */}
-      <div className="space-y-4">
-        <h3 className="text-sm font-medium">CHOOSE ENVIRONMENT:</h3>
-        <div className="flex gap-4">
-          <Button
-            variant={environment === "residential" ? "default" : "outline"}
-            onClick={() => setEnvironment("residential")}
-          >
-            Residential
-          </Button>
-          <Button
-            variant={environment === "commercial" ? "default" : "outline"}
-            onClick={() => setEnvironment("commercial")}
-          >
-            Commercial
-          </Button>
-        </div>
-      </div>
 
-      {/* Grout Controls */}
-      <div className="space-y-4">
-        <h3 className="text-sm font-medium">GROUT COLOR:</h3>
-        <div className="flex gap-2">
-          {["white", "gray", "black"].map((color) => (
-            <button
-              key={color}
-              className={`w-8 h-8 rounded-full border-2 ${groutColor === color ? "border-primary" : "border-transparent"
-                }`}
-              style={{ backgroundColor: color }}
-              onClick={() => setGroutColor(color as "white" | "gray" | "black")}
-            />
-          ))}
-        </div>
+          <div className="flex gap-5">
+            <div className="relative w-full h-[500px] aspect-[4/3] rounded-lg overflow-hidden border border-gray-200">
+              {/* Tile Preview Area - Placed FIRST so it appears behind the image */}
+              {showTilePreview && (
+                <div
+                  className={`absolute ${groutColor}-grout z-0`}
+                  style={{
+                    top: "0",
+                    left: "0",
+                    width: "900%",
+                    height: "500px",
+                    display: "grid",
+                    gridTemplateColumns: `repeat(${gridDimensions}, 1fr)`,
+                    gap: groutThickness === "none" ? "0px" : groutThickness === "thin" ? "1px" : "2px",
+                  }}
+                >
+                  <div
+                    ref={tileGridRef}
+                    className={`grid gap-[${groutThickness === "none" ? "0" : groutThickness === "thin" ? "1px" : "2px"}] bg-${groutColor}`}
+                    style={{
+                      gridTemplateColumns: `repeat(${gridDimensions}, 1fr)`,
+                      width: "100%",
+                      height: "100%",
+                    }}
+                  />
+                </div>
+              )}
 
-        <h3 className="text-sm font-medium">GROUT THICKNESS:</h3>
-        <div className="flex gap-2">
-          {["none", "thin", "thick"].map((thickness) => (
-            <Button
-              key={thickness}
-              variant={groutThickness === thickness ? "default" : "outline"}
-              onClick={() => setGroutThickness(thickness as "none" | "thin" | "thick")}
-            >
-              {thickness.charAt(0).toUpperCase() + thickness.slice(1)}
+              {/* Environment Images - Placed AFTER tiles so they appear on top */}
+              {environment === "bedroom" && (
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/bedroom-lgciYgf20Ecfw59Ha99cATsD81cIg1.png"
+                  alt="Bedroom"
+                  fill
+                  className="object-cover z-10"
+                  style={{ pointerEvents: "none" }}
+                />
+              )}
+              {environment === "bathroom" && (
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/bathroom-hLqygcqnRxthmSSSC6JXQ5PY9F3Ikj.png"
+                  alt="Bathroom"
+                  fill
+                  className="object-cover z-10"
+                  style={{ pointerEvents: "none" }}
+                />
+              )}
+              {environment === "kitchen" && (
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/kitchen-Z4MQgqYJYikOh6dVunIceNYb3DTWHz.png"
+                  alt="Kitchen"
+                  fill
+                  className="object-cover z-10"
+                  style={{ pointerEvents: "none" }}
+                />
+              )}
+              {environment === "commercial" && (
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/commercial-Ijj3TziTgprHfZnmkP5ujRrkR38IDE.png"
+                  alt="Commercial"
+                  fill
+                  className="object-cover z-10"
+                  style={{ pointerEvents: "none" }}
+                />
+              )}
+
+              {/* Toggle Button */}
+              <Button
+                className="absolute bottom-2 right-2 bg-white/80 hover:bg-white text-black text-xs py-1 px-2 h-auto"
+                onClick={() => setShowTilePreview(!showTilePreview)}
+              >
+                {showTilePreview ? "Hide Tiles" : "Show Tiles"}
+              </Button>
+            </div>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 gap-2">
+                <Button
+                  variant={environment === "bedroom" ? "default" : "outline"}
+                  onClick={() => setEnvironment("bedroom")}
+                  className="h-[83px] w-[144px] py-1"
+                >
+                  Bedroom
+                </Button>
+                <Button
+                  variant={environment === "bathroom" ? "default" : "outline"}
+                  onClick={() => setEnvironment("bathroom")}
+                  className="h-[83px] w-[144px] py-1"
+                >
+                  Bathroom
+                </Button>
+                <Button
+                  variant={environment === "kitchen" ? "default" : "outline"}
+                  onClick={() => setEnvironment("kitchen")}
+                  className="h-[83px] w-[144px] py-1"
+                >
+                  Kitchen
+                </Button>
+                <Button
+                  variant={environment === "commercial" ? "default" : "outline"}
+                  onClick={() => setEnvironment("commercial")}
+                  className="h-[83px] w-[144px] py-1"
+                >
+                  Commercial
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Grout Controls */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium">GROUT COLOR:</h3>
+            <div className="flex gap-2">
+              {["white", "gray", "black"].map((color) => (
+                <button
+                  key={color}
+                  className={`w-8 h-8 rounded-full border-2 ${groutColor === color ? "border-primary" : "border-transparent"
+                    }`}
+                  style={{ backgroundColor: color }}
+                  onClick={() => setGroutColor(color as "white" | "gray" | "black")}
+                />
+              ))}
+            </div>
+
+            <h3 className="text-sm font-medium">GROUT THICKNESS:</h3>
+            <div className="flex gap-2">
+              {["none", "thin", "thick"].map((thickness) => (
+                <Button
+                  key={thickness}
+                  variant={groutThickness === thickness ? "default" : "outline"}
+                  onClick={() => setGroutThickness(thickness as "none" | "thin" | "thick")}
+                >
+                  {thickness.charAt(0).toUpperCase() + thickness.slice(1)}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="grid-view" className="space-y-4">
+          {/* Grid Size Controls */}
+          <div className="flex gap-2">
+            <Button variant={gridSize === "8x8" ? "default" : "outline"} onClick={() => setGridSize("8x8")}>
+              8x8
             </Button>
-          ))}
-        </div>
+            <Button variant={gridSize === "12x12" ? "default" : "outline"} onClick={() => setGridSize("12x12")}>
+              12x12
+            </Button>
+          </div>
+
+          {/* Tile Grid */}
+          <div
+            className={`grid gap-[${groutThickness === "none" ? "0" : groutThickness === "thin" ? "1px" : "2px"}] bg-${groutColor} aspect-square`}
+            style={{
+              gridTemplateColumns: `repeat(${gridDimensions}, 1fr)`,
+            }}
+          >
+            <div
+              ref={tileGridRef}
+              className={`grid gap-[${groutThickness === "none" ? "0" : groutThickness === "thin" ? "1px" : "2px"}] bg-${groutColor}`}
+              style={{
+                gridTemplateColumns: `repeat(${gridDimensions}, 1fr)`,
+                width: "100%",
+                height: "100%",
+              }}
+            />
+          </div>
+
+          {/* Grout Controls */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium">GROUT COLOR:</h3>
+            <div className="flex gap-2">
+              {["white", "gray", "black"].map((color) => (
+                <button
+                  key={color}
+                  className={`w-8 h-8 rounded-full border-2 ${groutColor === color ? "border-primary" : "border-transparent"
+                    }`}
+                  style={{ backgroundColor: color }}
+                  onClick={() => setGroutColor(color as "white" | "gray" | "black")}
+                />
+              ))}
+            </div>
+
+            <h3 className="text-sm font-medium">GROUT THICKNESS:</h3>
+            <div className="flex gap-2">
+              {["none", "thin", "thick"].map((thickness) => (
+                <Button
+                  key={thickness}
+                  variant={groutThickness === thickness ? "default" : "outline"}
+                  onClick={() => setGroutThickness(thickness as "none" | "thin" | "thick")}
+                >
+                  {thickness.charAt(0).toUpperCase() + thickness.slice(1)}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+
+      <div className="py-10">
+        <Link href="/preview-your-custom-tile"><Button className="w-full">Save & Share</Button></Link>
       </div>
 
       <style jsx>{`
@@ -201,8 +349,8 @@ export default function ViewPanel({
           transition: transform 0.3s ease;
         }
         .none { gap: 0; }
-        .thin { gap: 2px; }
-        .thick { gap: 4px; }
+        .thin { gap: 1px; }
+        .thick { gap: 2px; }
         .white-grout { background-color: white; }
         .gray-grout { background-color: #666; }
         .black-grout { background-color: black; }

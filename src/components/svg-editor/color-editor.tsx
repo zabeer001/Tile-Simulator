@@ -1,9 +1,7 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Plus, X } from "lucide-react"
+import {  X } from "lucide-react"
 import { SvgRenderer } from "./svg-renderer"
 import type { SvgData, ColorData } from "./types"
 
@@ -19,8 +17,6 @@ interface ColorEditorProps {
 
 export function ColorEditor({
   svgArray,
-  showBorders,
-  setShowBorders,
   onColorSelect,
   onRotate,
   tileId,
@@ -46,10 +42,10 @@ export function ColorEditor({
     [svgArray],
   )
 
-  const handleSave = () => {
-    console.log("Saved Path Colors:", pathColors)
-    console.log("SVG Data:", svgArray)
-  }
+  // const handleSave = () => {
+  //   console.log("Saved Path Colors:", pathColors)
+  //   console.log("SVG Data:", svgArray)
+  // }
 
   const handleColorSelect = useCallback(
     (color: string) => {
@@ -120,20 +116,20 @@ export function ColorEditor({
   const selectedPathColor = selectedPathId ? pathColors[selectedPathId] : null
 
   return (
-    <ScrollArea className="h-full">
-      <div className="p-4 space-y-6">
-        {/* SVG Preview (Click to select a path) */}
-        <div className="border border-gray-200 rounded-md overflow-hidden flex justify-center items-center p-4">
-          <SvgRenderer
-            svgArray={svgArray}
-            selectedPathId={selectedPathId}
-            pathColors={pathColors}
-            onPathSelect={handlePathSelect}
-            onRotate={handleRotationChange}
-            rotations={rotations}
-          />
-        </div>
+    <div className="flex gap-10">
+      {/* SVG Preview (Click to select a path) */}
+      <div className="overflow-hidden flex justify-center items-center">
+        <SvgRenderer
+          svgArray={svgArray}
+          selectedPathId={selectedPathId}
+          pathColors={pathColors}
+          onPathSelect={handlePathSelect}
+          onRotate={handleRotationChange}
+          rotations={rotations}
+        />
+      </div>
 
+      <div className="w-full">
         {/* Colors List */}
         <div className="space-y-2">
           <h3 className="text-sm font-medium">ALL SVG COLORS:</h3>
@@ -157,7 +153,7 @@ export function ColorEditor({
         </div>
 
         {/* Border Controls */}
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Button
             variant={showBorders ? "default" : "outline"}
             className="w-full"
@@ -175,7 +171,7 @@ export function ColorEditor({
               </>
             )}
           </Button>
-        </div>
+        </div> */}
 
         {/* Selected Colors */}
         <div className="space-y-2">
@@ -212,12 +208,12 @@ export function ColorEditor({
             ))}
           </div>
         </div>
-
-        <Button className="w-full" onClick={handleSave}>
-          Save
-        </Button>
       </div>
-    </ScrollArea>
+
+      {/* <Button className="w-full" onClick={handleSave}>
+          Save
+        </Button> */}
+    </div>
   )
 }
 
