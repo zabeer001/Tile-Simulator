@@ -13,6 +13,9 @@ const TileColors = () => {
   const [selectedColor, setSelectedColor] = useState<AllTilesColorDataType | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
 
+
+  console.log(setCurrentPage);
+
   const session = useSession()
   const token = (session?.data?.user as { token: string })?.token
 
@@ -35,7 +38,7 @@ const TileColors = () => {
     setIsAddingOrEditing(false)
     setSelectedColor(null)
     const updatedColor = { ...color, image: color.image ?? "" } // Ensure `image` is always a string
-    console.log(updatedColor)
+    console.log(updatedColor);
   }
 
   const fetchColors = async (page: number) => {
@@ -56,20 +59,9 @@ const TileColors = () => {
     enabled: !!token,
   })
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-  }
+ 
 
-  const pagination = data?.meta || {
-    current_page: 1,
-    last_page: 1,
-    from: 0,
-    to: 0,
-    total: 16,
-    per_page: 10,
-  }
-
-  console.log(pagination)
+ 
 
   return (
     <div>
@@ -84,8 +76,6 @@ const TileColors = () => {
           isLoading={isLoading}
           isError={isError}
           error={error}
-          pagination={pagination}
-          fetchData={handlePageChange}
         />
       )}
     </div>

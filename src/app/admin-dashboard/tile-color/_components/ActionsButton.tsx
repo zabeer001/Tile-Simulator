@@ -62,7 +62,7 @@ function ActionsButton({ row, onEdit }: ActionsButtonProps) {
   
 
   const mutation = useMutation({
-    mutationFn: () => deleteColor(row.original.id),
+    mutationFn: () => deleteColor(Number(row.original.id)),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["colors"] }) // Refresh the color list
       setShowDeleteModal(false)
