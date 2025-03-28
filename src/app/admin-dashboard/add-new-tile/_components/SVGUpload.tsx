@@ -4,67 +4,84 @@ import type React from "react"
 
 import { useCallback, useState } from "react"
 import { useDropzone } from "react-dropzone"
-import { UploadCloud, X, FileImage } from "lucide-react"
+import { UploadCloud, X, FileImage, Check } from "lucide-react"
 
 interface SVGUploadProps {
   onUpload: (data: string) => void
+  maxSizeKB?: number
 }
 
-const SVGUpload = ({ onUpload }: SVGUploadProps) => {
+const SVGUpload = ({ onUpload, maxSizeKB = 500 }: SVGUploadProps) => {
   const [preview, setPreview] = useState<string | null>(null)
   const [fileName, setFileName] = useState<string | null>(null)
   const [uploadStatus, setUploadStatus] = useState<"idle" | "success" | "error">("idle")
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0]
       if (file) {
-        if (file.size > 500000) { // Example limit of 500 KB
-          alert("File size exceeds 500 KB. Please upload a smaller SVG file.");
-          return;
+        // Reset error state
+        setErrorMessage(null)
+
+        // Check file size
+        if (file.size > maxSizeKB * 1024) {
+          setErrorMessage(`File size exceeds ${maxSizeKB} KB. Please upload a smaller SVG file.`)
+          setUploadStatus("error")
+          return
         }
-  
+
         setFileName(file.name)
         setUploadStatus("idle")
-  
+
         const reader = new FileReader()
         reader.onload = (event) => {
           if (event.target?.result) {
             try {
               const svgData = event.target.result as string
-  
-              // Comprehensive SVG validation
+
+              // Enhanced SVG validation
               if (!svgData.includes("<svg") || !svgData.includes("</svg>")) {
-                throw new Error("Not a valid SVG file")
+                setErrorMessage("Not a valid SVG file. Please check the file format.")
+                setUploadStatus("error")
+                return
               }
-  
+
+              // Additional security check for potentially harmful content
+              if (svgData.includes("<script") || svgData.includes("javascript:")) {
+                setErrorMessage("SVG contains potentially unsafe content.")
+                setUploadStatus("error")
+                return
+              }
+
               setPreview(svgData)
               setUploadStatus("success")
-  
+
               if (typeof onUpload === "function") {
                 onUpload(svgData)
               } else {
                 console.error("onUpload is not a function", onUpload)
+                setErrorMessage("Upload handler error. Please try again.")
                 setUploadStatus("error")
               }
             } catch (error) {
               console.error("Error processing SVG:", error)
+              setErrorMessage("Failed to process SVG file. Please try another file.")
               setUploadStatus("error")
             }
           }
         }
-  
+
         reader.onerror = () => {
+          setErrorMessage("Failed to read file. Please try again.")
           setUploadStatus("error")
         }
-  
+
         reader.readAsText(file)
       }
     },
-    [onUpload],
+    [onUpload, maxSizeKB],
   )
-  
-  
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { "image/svg+xml": [".svg"] },
@@ -77,6 +94,7 @@ const SVGUpload = ({ onUpload }: SVGUploadProps) => {
     setPreview(null)
     setFileName(null)
     setUploadStatus("idle")
+    setErrorMessage(null)
     onUpload("")
   }
 
@@ -92,8 +110,11 @@ const SVGUpload = ({ onUpload }: SVGUploadProps) => {
               ? "border-green-500 bg-green-50"
               : "border-gray-300 bg-gray-50 hover:border-gray-400"
       }`}
+      role="button"
+      tabIndex={0}
+      aria-label="SVG upload area"
     >
-      <input {...getInputProps()} />
+      <input {...getInputProps()} aria-label="Upload SVG file" />
 
       {preview ? (
         <div className="flex flex-col items-center">
@@ -104,6 +125,7 @@ const SVGUpload = ({ onUpload }: SVGUploadProps) => {
               <div
                 className="absolute inset-0 flex items-center justify-center p-4"
                 dangerouslySetInnerHTML={{ __html: preview }}
+                aria-label="SVG preview"
               />
             </div>
 
@@ -111,7 +133,7 @@ const SVGUpload = ({ onUpload }: SVGUploadProps) => {
             <div className="absolute top-2 right-2">
               {uploadStatus === "success" ? (
                 <div className="bg-green-500 text-white p-1 rounded-full">
-                  {/* <Check size={16} /> */}
+                  <Check size={16} />
                 </div>
               ) : uploadStatus === "error" ? (
                 <div className="bg-red-500 text-white p-1 rounded-full">
@@ -125,6 +147,7 @@ const SVGUpload = ({ onUpload }: SVGUploadProps) => {
               type="button"
               onClick={handleRemove}
               className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-red-600 transition-colors"
+              aria-label="Remove uploaded SVG"
             >
               <X size={16} />
             </button>
@@ -155,7 +178,14 @@ const SVGUpload = ({ onUpload }: SVGUploadProps) => {
             Select SVG
           </button>
 
-          <p className="text-xs text-gray-400 mt-4">Only SVG files are accepted</p>
+          <p className="text-xs text-gray-400 mt-4">Only SVG files are accepted (max {maxSizeKB}KB)</p>
+        </div>
+      )}
+
+      {/* Error message display */}
+      {errorMessage && (
+        <div className="mt-3 text-red-500 text-sm" role="alert">
+          {errorMessage}
         </div>
       )}
     </div>

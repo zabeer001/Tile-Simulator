@@ -41,7 +41,7 @@ export function LoginForm() {
       console.log("Login successful:", values);
       router.push("/admin-dashboard");
     } catch (error) {
-      if(error ){
+      if (error) {
         console.error("Login error:", error)
       }
     }
@@ -64,7 +64,7 @@ export function LoginForm() {
               <FormItem>
                 <FormLabel>Email Address</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your email address" type="email" {...field} className="focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-secondary-100 focus-visible:outline-none"/>
+                  <Input placeholder="Enter your email address" type="email" {...field} className="focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-secondary-100 focus-visible:outline-none" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -78,7 +78,7 @@ export function LoginForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your password" type="password" {...field} className="focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-secondary-100 focus-visible:outline-none"/>
+                  <Input placeholder="Enter your password" type="password" {...field} className="focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-secondary-100 focus-visible:outline-none" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
