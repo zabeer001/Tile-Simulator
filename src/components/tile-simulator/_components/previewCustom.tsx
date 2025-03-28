@@ -13,17 +13,18 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Link from "next/link";
 
 const PreviewCustom = () => {
   const [quantityUnit, setQuantityUnit] = useState("Sqft.");
 
   return (
-    <div>
-      <div className="mt-10 mx-[135px] mb-10">
+    <div className="container">
+      <div className="mt-10 mb-10">
         <div className="flex justify-between">
-          <Button className="py-4 px-16 bg-transparent border border-[#CE3837] text-[#CE3837]">
+          <Link href="/"><Button className="py-4 px-16 bg-transparent border border-[#CE3837] text-[#CE3837]">
             Go Back
-          </Button>
+          </Button></Link>
           <h3 className="text-[#595959] font-normal text-[32px]">
             Preview Your Custom Tile
           </h3>

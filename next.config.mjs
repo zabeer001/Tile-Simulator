@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['127.0.0.1', 'localhost'],
+    domains: ['127.0.0.1', 'localhost', 'hebbkx1anhila5yf.public.blob.vercel-storage.com'],
   },
   async rewrites() {
     return [
