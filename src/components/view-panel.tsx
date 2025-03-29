@@ -398,8 +398,8 @@ export default function ViewPanel({
         </TabsContent>
       </Tabs>
 
-      <div className="py-10">
-        <Link href="/preview-your-custom-tile"><Button className="w-full">Save & Share</Button></Link>
+      <div className="py-10 flex items-center justify-center">
+        <Link href="/preview-your-custom-tile"><Button className="w-[288px] h-[51px]">Save & Share</Button></Link>
       </div>
 
       <style jsx>{`
