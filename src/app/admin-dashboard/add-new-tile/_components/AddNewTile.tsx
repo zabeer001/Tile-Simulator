@@ -315,9 +315,9 @@ const AddNewTile = () => {
                             <SelectTrigger className="w-full h-[40px] focus-visible:outline-none focus-visible:ring-0">
                               <SelectValue placeholder="Select a grid" />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="focus:outline-none focus:ring-0">
                               {gridSelectionData.map((item) => (
-                                <SelectItem key={item} value={item}>
+                                <SelectItem key={item} value={item} className="focus:outline-none focus:ring-0">
                                   {item}
                                 </SelectItem>
                               ))}
