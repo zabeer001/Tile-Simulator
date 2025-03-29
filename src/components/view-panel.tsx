@@ -4,8 +4,8 @@ import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent } from "@/components/ui/tabs"
 import type { SvgData } from "@/components/svg-editor/types"
-import Image from "next/image"
 import Link from "next/link"
+import Image from "next/image"
 
 interface Props {
   currentSvg: SvgData[] | null
@@ -21,11 +21,13 @@ export default function ViewPanel({
   rotations = [0, 0, 0, 0],
 }: Props) {
   const [gridSize, setGridSize] = useState<"8x8" | "12x12">("8x8")
-  const [environment, setEnvironment] = useState<"bedroom" | "bathroom" | "kitchen" | "commercial">("bedroom")
+  const [environment, setEnvironment] = useState<"bedroom" | "bathroom" | "kitchen" | "commercial" | "kitchen2">("bedroom")
   const [groutColor, setGroutColor] = useState<"white" | "gray" | "black">("white")
   const [groutThickness, setGroutThickness] = useState<"none" | "thin" | "thick">("thin")
   const tileGridRef = useRef<HTMLDivElement>(null)
   const [showTilePreview, setShowTilePreview] = useState(true)
+
+  console.log(setGroutColor, setGroutThickness)
 
   // Calculate grid dimensions based on selected size
   const gridDimensions = gridSize === "8x8" ? 8 : 12
@@ -217,35 +219,67 @@ export default function ViewPanel({
                   onClick={() => setEnvironment("bedroom")}
                   className="h-[83px] w-[144px] py-1"
                 >
-                  Bedroom
+                  <Image
+                    src="/assets/env_bedroom_hover_icon-1.png"
+                    alt="Bedroom Hover Icon"
+                    width={100}
+                    height={100}
+                  />
                 </Button>
                 <Button
                   variant={environment === "bathroom" ? "default" : "outline"}
                   onClick={() => setEnvironment("bathroom")}
                   className="h-[83px] w-[144px] py-1"
                 >
-                  Bathroom
+                  <Image
+                    src="/assets/Frame-1597881812.png"
+                    alt="bathroom"
+                    width={100}
+                    height={100}
+                  />
                 </Button>
                 <Button
                   variant={environment === "kitchen" ? "default" : "outline"}
                   onClick={() => setEnvironment("kitchen")}
                   className="h-[83px] w-[144px] py-1"
                 >
-                  Kitchen
+                  <Image
+                    src="/assets/Frame-1597881813.png"
+                    alt="ketchen"
+                    width={100}
+                    height={100}
+                  />
                 </Button>
                 <Button
                   variant={environment === "commercial" ? "default" : "outline"}
                   onClick={() => setEnvironment("commercial")}
                   className="h-[83px] w-[144px] py-1"
                 >
-                  Commercial
+                  <Image
+                    src="/assets/Frame-1597881814.png"
+                    alt="Commercial"
+                    width={100}
+                    height={100}
+                  />
+                </Button>
+                <Button
+                  variant={environment === "kitchen2" ? "default" : "outline"}
+                  onClick={() => setEnvironment("kitchen2")}
+                  className="h-[83px] w-[144px] py-1"
+                >
+                  <Image
+                    src="/assets/Frame-1597881815.png"
+                    alt="Commercial"
+                    width={100}
+                    height={100}
+                  />
                 </Button>
               </div>
             </div>
           </div>
 
           {/* Grout Controls */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h3 className="text-sm font-medium">GROUT COLOR:</h3>
             <div className="flex gap-2">
               {["white", "gray", "black"].map((color) => (
@@ -271,7 +305,7 @@ export default function ViewPanel({
                 </Button>
               ))}
             </div>
-          </div>
+          </div> */}
         </TabsContent>
 
         <TabsContent value="grid-view" className="space-y-4">
@@ -304,7 +338,7 @@ export default function ViewPanel({
           </div>
 
           {/* Grout Controls */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h3 className="text-sm font-medium">GROUT COLOR:</h3>
             <div className="flex gap-2">
               {["white", "gray", "black"].map((color) => (
@@ -330,7 +364,7 @@ export default function ViewPanel({
                 </Button>
               ))}
             </div>
-          </div>
+          </div> */}
         </TabsContent>
       </Tabs>
 

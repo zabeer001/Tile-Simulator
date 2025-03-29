@@ -97,7 +97,7 @@ export default function Tiles() {
                             />
                         </div>
 
-                        <div className="py-10">
+                        <div className="py-[100px]">
                             {currentSvg && currentSvg.length > 0 ? (
                                 <ColorEditor
                                     svgArray={currentSvg}

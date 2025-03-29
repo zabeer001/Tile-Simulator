@@ -138,14 +138,14 @@ export function TileSelection({ onTileSelect, selectedTile, tileRotations = {}, 
           {/* First row */}
           <div className="grid grid-cols-9 gap-4 mb-4">
             {getRowTiles(0).map((tile) => (
-              <div key={tile.id} className="flex flex-col items-center">
+              <div key={tile.id} className="flex flex-col items-center border border-[#595959]/40">
                 <button
                   onClick={() => handleTileSelect(tile)}
                   className={cn(
-                    "relative w-[100px] h-[100px] rounded-lg overflow-hidden border-2 transition-all bg-white",
+                    "relative w-[100px] h-[100px]overflow-hidden transition-all bg-white",
                     selectedTile?.id === tile.id
-                      ? "border-primary shadow-lg scale-[0.98]"
-                      : "border-border hover:border-primary/50",
+                      ? " scale-[0.98]"
+                      : "",
                   )}
                 >
                   <div
@@ -200,14 +200,14 @@ export function TileSelection({ onTileSelect, selectedTile, tileRotations = {}, 
           {/* Second row */}
           <div className="grid grid-cols-9 gap-4">
             {getRowTiles(1).map((tile) => (
-              <div key={`second-${tile.id}`} className="flex flex-col items-center">
+              <div key={`second-${tile.id}`} className="flex flex-col items-center border border-[#595959]/40">
                 <button
                   onClick={() => handleTileSelect(tile)}
                   className={cn(
-                    "relative w-[100px] h-[100px] rounded-lg overflow-hidden border-2 transition-all bg-white",
+                    "relative w-[100px] h-[100px] overflow-hidden  transition-all bg-white",
                     selectedTile?.id === tile.id
-                      ? "border-primary shadow-lg scale-[0.98]"
-                      : "border-border hover:border-primary/50",
+                      ? " scale-[0.98]"
+                      : "",
                   )}
                 >
                   <div
