@@ -74,7 +74,7 @@ export default function AddTileEditAndAddCategories({ category, onCancel }: AddT
   }
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
+    <div className="py-6 space-y-6">
       <div className="flex items-center justify-between gap-4 mb-6">
         <div className="space-y-1">
           <h2 className="text-2xl font-semibold leading-tight">

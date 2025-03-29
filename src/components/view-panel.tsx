@@ -21,7 +21,7 @@ export default function ViewPanel({
   rotations = [0, 0, 0, 0],
 }: Props) {
   const [gridSize, setGridSize] = useState<"8x8" | "12x12">("8x8")
-  const [environment, setEnvironment] = useState<"bedroom" | "bathroom" | "kitchen" | "commercial" | "kitchen2">("bedroom")
+  const [environment, setEnvironment] = useState<"bedroom" | "bathroom" | "kitchen" | "commercial" | "kitchen2" | "bathroom2">("bedroom")
   const [groutColor, setGroutColor] = useState<"white" | "gray" | "black">("white")
   const [groutThickness, setGroutThickness] = useState<"none" | "thin" | "thick">("thin")
   const tileGridRef = useRef<HTMLDivElement>(null)
@@ -147,8 +147,8 @@ export default function ViewPanel({
                   style={{
                     top: "0",
                     left: "0",
-                    width: "900%",
-                    height: "500px",
+                    width: "800%",
+                    height: "400px",
                     display: "grid",
                     gridTemplateColumns: `repeat(${gridDimensions}, 1fr)`,
                     gap: groutThickness === "none" ? "0px" : groutThickness === "thin" ? "1px" : "2px",
@@ -156,7 +156,7 @@ export default function ViewPanel({
                 >
                   <div
                     ref={tileGridRef}
-                    className={`grid gap-[${groutThickness === "none" ? "0" : groutThickness === "thin" ? "1px" : "2px"}] bg-${groutColor}`}
+                    className={`grid gap-[${groutThickness === "none" ? "0" : groutThickness === "thin" ? "1px" : "2px"}]   bg-${groutColor}`}
                     style={{
                       gridTemplateColumns: `repeat(${gridDimensions}, 1fr)`,
                       width: "100%",
@@ -169,7 +169,7 @@ export default function ViewPanel({
               {/* Environment Images - Placed AFTER tiles so they appear on top */}
               {environment === "bedroom" && (
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/bedroom-lgciYgf20Ecfw59Ha99cATsD81cIg1.png"
+                  src="/assets/environment1.svg"
                   alt="Bedroom"
                   fill
                   className="object-cover z-10"
@@ -178,7 +178,7 @@ export default function ViewPanel({
               )}
               {environment === "bathroom" && (
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/bathroom-hLqygcqnRxthmSSSC6JXQ5PY9F3Ikj.png"
+                  src="/assets/environment2.svg"
                   alt="Bathroom"
                   fill
                   className="object-cover z-10"
@@ -187,7 +187,7 @@ export default function ViewPanel({
               )}
               {environment === "kitchen" && (
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/kitchen-Z4MQgqYJYikOh6dVunIceNYb3DTWHz.png"
+                  src="/assets/environment3.svg"
                   alt="Kitchen"
                   fill
                   className="object-cover z-10"
@@ -196,7 +196,25 @@ export default function ViewPanel({
               )}
               {environment === "commercial" && (
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/commercial-Ijj3TziTgprHfZnmkP5ujRrkR38IDE.png"
+                  src="/assets/environment4.svg"
+                  alt="Commercial"
+                  fill
+                  className="object-cover z-10"
+                  style={{ pointerEvents: "none" }}
+                />
+              )}
+              {environment === "kitchen2" && (
+                <Image
+                  src="/assets/environment5.svg"
+                  alt="Commercial"
+                  fill
+                  className="object-cover z-10"
+                  style={{ pointerEvents: "none" }}
+                />
+              )}
+              {environment === "bathroom2" && (
+                <Image
+                  src="/assets/environment6.svg"
                   alt="Commercial"
                   fill
                   className="object-cover z-10"
@@ -265,6 +283,18 @@ export default function ViewPanel({
                 <Button
                   variant={environment === "kitchen2" ? "default" : "outline"}
                   onClick={() => setEnvironment("kitchen2")}
+                  className="h-[83px] w-[144px] py-1"
+                >
+                  <Image
+                    src="/assets/Frame-1597881815.png"
+                    alt="Commercial"
+                    width={100}
+                    height={100}
+                  />
+                </Button>
+                <Button
+                  variant={environment === "bathroom2" ? "default" : "outline"}
+                  onClick={() => setEnvironment("bathroom2")}
                   className="h-[83px] w-[144px] py-1"
                 >
                   <Image
