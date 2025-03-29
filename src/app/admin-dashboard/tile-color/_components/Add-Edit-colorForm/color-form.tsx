@@ -213,7 +213,7 @@ export function ColorForm({ color, onCancel, onSave }: ColorFormProps) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="">
       <FormHeader isEditing={isEditing} isSubmitting={isSubmitting} onSave={handleSave} />
 
       {message && (

@@ -31,7 +31,7 @@ const TileSimulatorHeader = () => {
   });
 
   console.log(data);
-  const filterData = data?.data.map((item) => ({
+  const filterData = data?.data?.map((item) => ({
     id: item.id,
     name: item.name,
     value: item.name,
