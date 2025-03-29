@@ -1,6 +1,6 @@
 "use client"
 import { useParams } from "next/navigation"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { AllTilesData } from "../../_components/AllTilesData"
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Save } from "lucide-react"
 import { toast } from "sonner"
+import SVGUpload from "../../add-new-tile/_components/SVGUpload"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -109,9 +110,9 @@ const EditNewTile = () => {
     console.log("Form data:", formData)
   }
 
-  // const handleSvgChange = useCallback((newSvgData: string) => {
-  //   setSvgData(newSvgData)
-  // }, [])
+  const handleSvgChange = useCallback((newSvgData: string) => {
+    setSvgData(newSvgData)
+  }, [])
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -173,12 +174,12 @@ const EditNewTile = () => {
                         <FormLabel className="text-base font-medium text-secondary-200">Category</FormLabel>
                         <FormControl>
                           <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
-                            <SelectTrigger className="w-full h-[40px] border-secondary-100">
+                            <SelectTrigger className="w-full h-[40px] focus-visible:outline-none focus-visible:ring-0">
                               <SelectValue placeholder="Select a category" />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="focus:outline-none focus:ring-0">
                               {categoryData?.map((item) => (
-                                <SelectItem key={item} value={item}>
+                                <SelectItem key={item} value={item} className="focus:outline-none focus:ring-0">
                                   {item}
                                 </SelectItem>
                               ))}
@@ -200,12 +201,12 @@ const EditNewTile = () => {
                         <FormLabel className="text-base font-medium text-secondary-200">Grid Selection</FormLabel>
                         <FormControl>
                           <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
-                            <SelectTrigger className="w-full h-[40px] border-secondary-100">
+                            <SelectTrigger className="w-full h-[40px] focus-visible:outline-none focus-visible:ring-0">
                               <SelectValue placeholder="Select a grid" />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="focus:outline-none focus:ring-0">
                               {gridSelectionData?.map((item) => (
-                                <SelectItem key={item} value={item}>
+                                <SelectItem key={item} value={item} className="focus:outline-none focus:ring-0">
                                   {item}
                                 </SelectItem>
                               ))}
@@ -224,6 +225,7 @@ const EditNewTile = () => {
               <FormLabel className="text-xl font-semibold text-[#1A1C21] leading-[120%]">Add Photo</FormLabel>
               <div className="pt-[14px]">
                 {/* <AddPhotoSvgEditor onSvgChange={handleSvgChange} initialSvg={svgData} /> */}
+                <SVGUpload onUpload={handleSvgChange} maxSizeKB={500} />
               </div>
               {/* button  */}
               <div className="pt-10 w-full flex items-center justify-end">
