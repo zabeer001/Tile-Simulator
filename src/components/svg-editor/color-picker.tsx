@@ -192,7 +192,7 @@ export function ColorPicker({ color, onChange, recentColors = [] }: ColorPickerP
       {!showColorPicker ? (
         <div className=" flex justify-between">
           {/* Pen tool button */}
-          <div className="flex items-start gap-4 w-[300px]">
+          <div className="flex items-start gap-4 w-[300px] p-4 rounded-lg" style={{ boxShadow: "0px 0px 8px 0px #00000029" }}>
             <button
               className="w-12 h-12 bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition-colors flex items-center justify-center"
               onClick={() => setShowColorPicker(true)}
@@ -218,7 +218,7 @@ export function ColorPicker({ color, onChange, recentColors = [] }: ColorPickerP
             <div className="flex-1">
               {/* Hue slider */}
               <div
-                className="w-full h-6 rounded-md cursor-pointer relative mb-2"
+                className="w-full h-4 rounded-md cursor-pointer relative mb-4"
                 style={{
                   background:
                     "linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%)",
@@ -233,7 +233,7 @@ export function ColorPicker({ color, onChange, recentColors = [] }: ColorPickerP
 
               {/* Saturation slider */}
               <div
-                className="w-full h-6 rounded-md cursor-pointer relative bg-gradient-to-r from-gray-300 to-green-500"
+                className="w-full h-4 rounded-md cursor-pointer relative bg-gradient-to-r from-gray-300 to-green-500"
                 onClick={handleSaturationClick}
               >
                 <div
