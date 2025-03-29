@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { toast } from "sonner"
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -33,19 +34,23 @@ export function LoginForm() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true)
     try {
       const result = await signIn("credentials", { email: values.email, password: values.password, redirect: false });
       if (result?.error) {
         throw new Error(result.error);
       }
       console.log("Login successful:", values);
+      toast.success("Login successful");
       router.push("/admin-dashboard");
     } catch (error) {
       if (error) {
         console.error("Login error:", error)
       }
     }
-    console.log(values)
+    finally {
+      setIsLoading(false); // Stop loading state
+    }
   }
 
   return (
