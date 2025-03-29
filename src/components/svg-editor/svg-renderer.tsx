@@ -162,51 +162,57 @@ export function SvgRenderer({
   // })
 
   return (
-    <div className={`grid ${svgArray.length === 4 ? "grid-cols-2" : "grid-cols-1"} gap-1`}>
-      {svgArray.map((svg, index) => (
-        <div key={svg.id || `svg-${index}`} className="relative group">
-          {/* Remove the rotation indicator */}
+    <div>
+      <div className="text-center mb-[16px]">
+        <p className="text-[#595959] text-[16px] mb-[24px]">Click on a section to change its color</p>
+        <h1 className="text-black text-[16px]">Tile Preview</h1>
+      </div>
+      <div className={`grid ${svgArray.length === 4 ? "grid-cols-2 w-[482px] h-[470px]" : "grid-cols-1"} gap-1`}>
+        {svgArray.map((svg, index) => (
+          <div key={svg.id || `svg-${index}`} className="relative group">
+            {/* Remove the rotation indicator */}
 
-          {/* SVG Element */}
-          <svg
-            width={svg.width || "100px"}
-            height={svg.height || "100px"}
-            viewBox={svg.viewBox || "0 0 100 100"}
-            className="border border-gray-300 rounded-lg shadow-md p-2 w-full h-full"
-            style={{
-              transform: `rotate(${rotations[index]}deg)`,
-              transition: "transform 0.3s ease-in-out",
-            }}
-          >
-            {/* Render paths */}
-            {svg.paths && svg.paths.length > 0 ? (
-              svg.paths.map((path) => (
-                <path
-                  key={path.id}
-                  id={path.id}
-                  d={path.d}
-                  fill={getPathColor(path)}
-                  style={getPathStyle(path.id)}
-                  onClick={() => handlePathSelect(path.id)}
-                />
-              ))
-            ) : (
-              <text x="10" y="50" fill="white" className="text-xs">
-                No paths found
-              </text>
-            )}
-          </svg>
+            {/* SVG Element */}
+            <svg
+              width={svg.width || "100px"}
+              height={svg.height || "100px"}
+              viewBox={svg.viewBox || "0 0 100 100"}
+              className="border border-gray-300 rounded-lg shadow-md p-2 w-full h-full"
+              style={{
+                transform: `rotate(${rotations[index]}deg)`,
+                transition: "transform 0.3s ease-in-out",
+              }}
+            >
+              {/* Render paths */}
+              {svg.paths && svg.paths.length > 0 ? (
+                svg.paths.map((path) => (
+                  <path
+                    key={path.id}
+                    id={path.id}
+                    d={path.d}
+                    fill={getPathColor(path)}
+                    style={getPathStyle(path.id)}
+                    onClick={() => handlePathSelect(path.id)}
+                  />
+                ))
+              ) : (
+                <text x="10" y="50" fill="white" className="text-xs">
+                  No paths found
+                </text>
+              )}
+            </svg>
 
-          {/* Rotate Button */}
-          <button
-            onClick={() => handleRotate(index)}
-            className="absolute top-2 right-2 bg-white p-1 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-gray-200"
-            aria-label="Rotate SVG"
-          >
-            <RotateCw size={16} />
-          </button>
-        </div>
-      ))}
+            {/* Rotate Button */}
+            <button
+              onClick={() => handleRotate(index)}
+              className="absolute top-2 right-2 bg-white p-1 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-gray-200"
+              aria-label="Rotate SVG"
+            >
+              <RotateCw size={16} />
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

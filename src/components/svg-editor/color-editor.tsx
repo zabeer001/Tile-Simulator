@@ -1,9 +1,10 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import {  X } from "lucide-react"
 import { SvgRenderer } from "./svg-renderer"
 import type { SvgData, ColorData } from "./types"
+import { ColorPicker } from "./color-picker"
+import GroutThicknessColor from "./grout-thickness-color"
 
 interface ColorEditorProps {
   svgArray: SvgData[] // Expect an array of SvgData
@@ -91,20 +92,20 @@ export function ColorEditor({
     [selectedPathId, onColorSelect, selectedColors, svgArray],
   )
 
-  const handleRemoveColor = useCallback(
-    (colorToRemove: string) => {
-      const updatedPathColors = { ...pathColors }
-      Object.keys(updatedPathColors).forEach((pathId) => {
-        if (updatedPathColors[pathId] === colorToRemove) {
-          delete updatedPathColors[pathId]
-        }
-      })
+  // const handleRemoveColor = useCallback(
+  //   (colorToRemove: string) => {
+  //     const updatedPathColors = { ...pathColors }
+  //     Object.keys(updatedPathColors).forEach((pathId) => {
+  //       if (updatedPathColors[pathId] === colorToRemove) {
+  //         delete updatedPathColors[pathId]
+  //       }
+  //     })
 
-      setPathColors(updatedPathColors)
-      setSelectedColors((prev) => prev.filter((c) => c.color !== colorToRemove))
-    },
-    [pathColors],
-  )
+  //     setPathColors(updatedPathColors)
+  //     setSelectedColors((prev) => prev.filter((c) => c.color !== colorToRemove))
+  //   },
+  //   [pathColors],
+  // )
 
   const handleRotationChange = (index: number, newRotation: number) => {
     console.log(`[COLOR EDITOR] Rotating SVG ${index} to ${newRotation}°`)
@@ -116,9 +117,9 @@ export function ColorEditor({
   const selectedPathColor = selectedPathId ? pathColors[selectedPathId] : null
 
   return (
-    <div className="flex gap-10">
+    <div className="flex gap-[130px]">
       {/* SVG Preview (Click to select a path) */}
-      <div className="overflow-hidden flex justify-center items-center">
+      <div className=" flex justify-center items-center">
         <SvgRenderer
           svgArray={svgArray}
           selectedPathId={selectedPathId}
@@ -132,7 +133,7 @@ export function ColorEditor({
       <div className="w-full">
         {/* Colors List */}
         <div className="space-y-2">
-          <h3 className="text-sm font-medium">ALL SVG COLORS:</h3>
+          <h3 className="text-sm font-medium">Colors Used:</h3>
           <div className="flex flex-wrap gap-2">
             {Array.from(
               new Set([...Object.values(pathColors), ...svgArray.flatMap((svg) => svg.paths.map((p) => p.fill))])
@@ -173,34 +174,15 @@ export function ColorEditor({
           </Button>
         </div> */}
 
-        {/* Selected Colors */}
-        <div className="space-y-2">
-          <h3 className="text-sm font-medium">COLORS USED:</h3>
-          <div className="flex flex-wrap gap-2">
-            {Object.values(pathColors).map((color, index) => (
-              <div
-                key={index}
-                className="w-8 h-8 rounded border border-gray-200 cursor-pointer relative group"
-                style={{ backgroundColor: color }}
-                onClick={() => handleRemoveColor(color)}
-                title="Click to remove"
-              >
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/20">
-                  <X className="h-4 w-4 text-white" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+
 
         {/* Color Palette */}
-        <div className="space-y-4">
-          <h3 className="text-sm font-medium">Select Color:</h3>
-          <div className="grid grid-cols-8 gap-1">
+        <div className="space-y-4 mt-[32px]">
+          <div className="grid grid-cols-10 gap-1">
             {colorPalette.map((color, index) => (
               <button
                 key={index}
-                className={`w-6 h-6 rounded-sm border transition-transform hover:scale-110 ${selectedPathColor === color ? "border-black ring-2 ring-black/20" : "border-gray-200"}`}
+                className={`w-8 h-8 rounded-sm border transition-transform hover:scale-110 ${selectedPathColor === color ? "border-black ring-2 ring-black/20" : "border-gray-200"}`}
                 style={{ backgroundColor: color }}
                 onClick={() => handleColorSelect(color)}
                 disabled={!selectedPathId}
@@ -208,7 +190,19 @@ export function ColorEditor({
             ))}
           </div>
         </div>
+        {/* Color Picker */}
+        <div className="py-8">
+          <ColorPicker
+            color={selectedPathColor || "#000000"}
+            onChange={(color) => selectedPathId && handleColorSelect(color)}
+            recentColors={Object.values(pathColors).filter(Boolean)}
+          />
+        </div>
+        <div>
+          <GroutThicknessColor/>
+        </div>
       </div>
+
 
       {/* <Button className="w-full" onClick={handleSave}>
           Save
