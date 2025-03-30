@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/category_select";
 import { useQuery } from "@tanstack/react-query";
-import { ApiResponse } from "@/components/types/all-tiles-categories";
+import { APIResponse } from "@/components/types/all-tiles-categories";
 
 const TileSimulatorHeader = () => {
   const [search, setSearch] = useState("");
@@ -22,7 +22,7 @@ const TileSimulatorHeader = () => {
     setSearch("");
   };
 
-  const { data } = useQuery<ApiResponse>({
+  const { data } = useQuery<APIResponse>({
     queryKey: ["all-tiles-categories"],
     queryFn: () =>
       fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories`).then(
@@ -30,12 +30,14 @@ const TileSimulatorHeader = () => {
       ),
   });
 
-  console.log(data);
-  const filterData = data?.data?.map((item) => ({
-    id: item.id,
-    name: item.name,
-    value: item.name,
-  }));
+  console.log(data?.data.data);
+  const filterData =
+    data?.data?.data?.map((item: { id: number; name: string }) => ({
+      id: item.id,
+      name: item.name,
+      value: item.name,
+    })) || [];
+
   console.log(filterData);
 
   return (
