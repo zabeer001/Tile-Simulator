@@ -3,12 +3,31 @@
 import type React from "react"
 
 import { useState, useEffect, useRef } from "react"
+import { ChevronDown } from "lucide-react"
 
 interface ColorPickerProps {
   color: string
   onChange: (color: string) => void
   recentColors?: string[]
+
 }
+
+// Define named colors for the dropdown
+const namedColors = [
+  { name: "Green C", color: "#4CAF50" },
+  { name: "Green B", color: "#8BC34A" },
+  { name: "Red221", color: "#FF5252" },
+  { name: "232b", color: "#232B2B" },
+  { name: "Blue Sky", color: "#03A9F4" },
+  { name: "Purple", color: "#9C27B0" },
+  { name: "Orange", color: "#FF9800" },
+  { name: "Yellow", color: "#FFEB3B" },
+  { name: "232b", color: "#232B2B" },
+  { name: "Blue Sky", color: "#03A9F4" },
+  { name: "Purple", color: "#9C27B0" },
+  { name: "Orange", color: "#FF9800" },
+  { name: "Yellow", color: "#FFEB3B" },
+]
 
 export function ColorPicker({ color, onChange, recentColors = [] }: ColorPickerProps) {
   const [hue, setHue] = useState(0)
@@ -21,6 +40,27 @@ export function ColorPicker({ color, onChange, recentColors = [] }: ColorPickerP
   const paletteRef = useRef<HTMLDivElement>(null)
   const hueRef = useRef<HTMLDivElement>(null)
   const saturationRef = useRef<HTMLDivElement>(null)
+  const colorPickerRef = useRef<HTMLDivElement>(null)
+  const [showDropdown, setShowDropdown] = useState(false)
+  const [selectedColorName, setSelectedColorName] = useState("Select Color")
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+   // Close color picker and dropdown when clicking outside
+   useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (colorPickerRef.current && !colorPickerRef.current.contains(event.target as Node)) {
+        setShowColorPicker(false)
+      }
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   // Update the color picker when the color prop changes
   useEffect(() => {
@@ -32,6 +72,14 @@ export function ColorPicker({ color, onChange, recentColors = [] }: ColorPickerP
         setHue(hsl.h)
         setSaturation(hsl.s)
         setLightness(hsl.l)
+      }
+
+      // Find if the color matches any named color
+      const matchedColor = namedColors.find((c) => c.color.toLowerCase() === color.toLowerCase())
+      if (matchedColor) {
+        setSelectedColorName(matchedColor.name)
+      } else {
+        setSelectedColorName(color)
       }
     }
   }, [color, hexValue])
@@ -50,10 +98,10 @@ export function ColorPicker({ color, onChange, recentColors = [] }: ColorPickerP
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
     return result
       ? {
-          r: Number.parseInt(result[1], 16),
-          g: Number.parseInt(result[2], 16),
-          b: Number.parseInt(result[3], 16),
-        }
+        r: Number.parseInt(result[1], 16),
+        g: Number.parseInt(result[2], 16),
+        b: Number.parseInt(result[3], 16),
+      }
       : null
   }
 
@@ -164,12 +212,30 @@ export function ColorPicker({ color, onChange, recentColors = [] }: ColorPickerP
     updateColor(hue, newSaturation, lightness)
   }
 
-  // Update the color based on HSL values
-  const updateColor = (h: number, s: number, l: number) => {
-    const rgb = hslToRgb(h, s, l)
-    const hex = rgbToHex(rgb.r, rgb.g, rgb.b)
-    setHexValue(hex)
-    onChange(hex)
+ // Update the color based on HSL values
+ const updateColor = (h: number, s: number, l: number) => {
+  const rgb = hslToRgb(h, s, l)
+  const hex = rgbToHex(rgb.r, rgb.g, rgb.b)
+  setHexValue(hex)
+  setSelectedColorName(hex)
+  onChange(hex)
+}
+
+  // Handle named color selection
+  const handleNamedColorSelect = (name: string, colorValue: string) => {
+    setHexValue(colorValue)
+    setSelectedColorName(name)
+    onChange(colorValue)
+    setShowDropdown(false)
+
+    // Update HSL values based on the selected color
+    const rgb = hexToRgb(colorValue)
+    if (rgb) {
+      const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b)
+      setHue(hsl.h)
+      setSaturation(hsl.s)
+      setLightness(hsl.l)
+    }
   }
 
   // Get the background gradient for the palette
@@ -190,9 +256,9 @@ export function ColorPicker({ color, onChange, recentColors = [] }: ColorPickerP
   return (
     <div className="w-full">
       {!showColorPicker ? (
-        <div className=" flex justify-between">
+        <div className=" flex justify-between" >
           {/* Pen tool button */}
-          <div className="flex items-start gap-4 w-[300px] p-4 rounded-lg" style={{ boxShadow: "0px 0px 8px 0px #00000029" }}>
+          <div className="flex items-start gap-4 w-[300px] p-4 rounded-lg"  style={{ boxShadow: "0px 0px 8px 0px #00000029" }}>
             <button
               className="w-12 h-12 bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition-colors flex items-center justify-center"
               onClick={() => setShowColorPicker(true)}
@@ -251,9 +317,8 @@ export function ColorPicker({ color, onChange, recentColors = [] }: ColorPickerP
               {[...new Set([...savedColors, ...recentColors])].slice(0, 5).map((savedColor, index) => (
                 <button
                   key={index}
-                  className={`w-8 h-8 rounded-md border border-gray-300 ${
-                    savedColor === hexValue ? "ring-2 ring-black" : ""
-                  }`}
+                  className={`w-8 h-8 rounded-md border border-gray-300 ${savedColor === hexValue ? "ring-2 ring-black" : ""
+                    }`}
                   style={{ backgroundColor: savedColor }}
                   onClick={() => {
                     setHexValue(savedColor)
@@ -272,97 +337,133 @@ export function ColorPicker({ color, onChange, recentColors = [] }: ColorPickerP
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className=" bg-white  flex rounded-lg shadow-lg overflow-hidden absolute z-50 gap-2 p-2">
+
           {/* Color gradient square */}
-          <div
-            ref={paletteRef}
-            className="w-full h-64 cursor-crosshair relative"
-            style={{ background: getPaletteBackground() }}
-            onClick={handlePaletteClick}
-          >
+          <div className="p-2 rounded " style={{ boxShadow: "0px 0px 8px 0px #00000029" }}>
             <div
-              className="w-4 h-4 rounded-full border-2 border-white absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-              style={{
-                left: `${saturation}%`,
-                top: `${100 - lightness}%`,
-              }}
-            />
-          </div>
+              ref={paletteRef}
+              className="w-full h-64 cursor-crosshair relative"
+              style={{ background: getPaletteBackground() }}
+              onClick={handlePaletteClick}
+            >
+              <div
+                className="w-4 h-4 rounded-full border-2 border-white absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                style={{
+                  left: `${saturation}%`,
+                  top: `${100 - lightness}%`,
+                }}
+              />
+            </div>
 
-          <div className="p-4 space-y-4">
-            <div className="flex items-center gap-2">
-              {/* Pen tool button */}
-              <button
-                className="w-10 h-10 bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition-colors flex items-center justify-center"
-                onClick={() => setShowColorPicker(false)}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+            <div className="p-4 space-y-4">
+              <div className="flex items-center gap-2">
+                {/* Pen tool button */}
+                <button
+                  className="w-10 h-10 bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition-colors flex items-center justify-center"
+                  onClick={() => setShowColorPicker(false)}
                 >
-                  <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
-                  <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-                  <path d="M2 2l7.586 7.586"></path>
-                  <circle cx="11" cy="11" r="2"></circle>
-                </svg>
-              </button>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                    <path d="M2 2l7.586 7.586"></path>
+                    <circle cx="11" cy="11" r="2"></circle>
+                  </svg>
+                </button>
 
-              <div className="flex-1">
-                {/* Hue slider */}
-                <div
-                  ref={hueRef}
-                  className="w-full h-4 rounded-md cursor-pointer relative mb-2"
-                  style={{
-                    background:
-                      "linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%)",
-                  }}
-                  onClick={handleHueClick}
-                >
+                <div className="flex-1">
+                  {/* Hue slider */}
                   <div
-                    className="w-4 h-4 bg-white rounded-full absolute -translate-x-1/2 -translate-y-1/2 top-1/2 pointer-events-none border border-gray-300"
-                    style={{ left: `${(hue / 360) * 100}%` }}
-                  />
+                    ref={hueRef}
+                    className="w-full h-4 rounded-md cursor-pointer relative mb-2"
+                    style={{
+                      background:
+                        "linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%)",
+                    }}
+                    onClick={handleHueClick}
+                  >
+                    <div
+                      className="w-4 h-4 bg-white rounded-full absolute -translate-x-1/2 -translate-y-1/2 top-1/2 pointer-events-none border border-gray-300"
+                      style={{ left: `${(hue / 360) * 100}%` }}
+                    />
+                  </div>
+
+                  {/* Saturation slider */}
+                  <div
+                    ref={saturationRef}
+                    className="w-full h-4 rounded-md cursor-pointer relative bg-gradient-to-r from-gray-300 to-green-500"
+                    onClick={handleSaturationClick}
+                  >
+                    <div
+                      className="w-4 h-4 bg-white rounded-full absolute -translate-x-1/2 -translate-y-1/2 top-1/2 pointer-events-none border border-gray-300"
+                      style={{ left: `${saturation}%` }}
+                    />
+                  </div>
                 </div>
+              </div>
 
-                {/* Saturation slider */}
-                <div
-                  ref={saturationRef}
-                  className="w-full h-4 rounded-md cursor-pointer relative bg-gradient-to-r from-gray-300 to-green-500"
-                  onClick={handleSaturationClick}
-                >
-                  <div
-                    className="w-4 h-4 bg-white rounded-full absolute -translate-x-1/2 -translate-y-1/2 top-1/2 pointer-events-none border border-gray-300"
-                    style={{ left: `${saturation}%` }}
-                  />
+              {/* Color values */}
+              <div className="grid grid-cols-4 gap-2">
+                <div className="text-center">
+                  <div className="text-xs text-gray-500">HEX</div>
+                  <div className="font-mono text-sm">{hexValue}</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-xs text-gray-500">R</div>
+                  <div className="font-mono text-sm">{r}</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-xs text-gray-500">G</div>
+                  <div className="font-mono text-sm">{g}</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-xs text-gray-500">B</div>
+                  <div className="font-mono text-sm">{b}</div>
                 </div>
               </div>
             </div>
+          </div>
+          <div>
+            <div ref={dropdownRef} className="relative w-[200px]">
+              <button
+                className="flex items-center justify-between w-full px-4 py-2 text-left border border-gray-300 rounded-md bg-white hover:bg-gray-50 focus:outline-none"
+                onClick={() => setShowDropdown(!showDropdown)}
+              >
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-sm border border-gray-300" style={{ backgroundColor: hexValue }}></div>
+                  <span className="text-[18px] font-medium">{selectedColorName}</span>
+                </div>
+                <ChevronDown className={`h-4 w-4 transition-transform ${showDropdown ? "rotate-180" : ""}`} />
+              </button>
 
-            {/* Color values */}
-            <div className="grid grid-cols-4 gap-2">
-              <div className="text-center">
-                <div className="text-xs text-gray-500">HEX</div>
-                <div className="font-mono text-sm">{hexValue}</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xs text-gray-500">R</div>
-                <div className="font-mono text-sm">{r}</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xs text-gray-500">G</div>
-                <div className="font-mono text-sm">{g}</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xs text-gray-500">B</div>
-                <div className="font-mono text-sm">{b}</div>
-              </div>
+              {/* Dropdown menu */}
+              {showDropdown && (
+                <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md max-h-[348px] shadow-lg overflow-auto">
+                  {namedColors.map((namedColor, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 px-4 py-2 hover:bg-red-100 cursor-pointer"
+                      onClick={() => handleNamedColorSelect(namedColor.name, namedColor.color)}
+                    >
+                      <div
+                        className="w-4 h-4 rounded-sm border border-gray-300"
+                        style={{ backgroundColor: namedColor.color }}
+                      ></div>
+                      <span className="text-[18px] font-medium">{namedColor.name}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

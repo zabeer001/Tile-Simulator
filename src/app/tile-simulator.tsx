@@ -17,10 +17,18 @@ interface Tile {
 
 export default function Tiles() {
     const [selectedTile, setSelectedTile] = useState<Tile | null>(null)
-    const [currentSvg, setCurrentSvg] = useState<SvgData[] | null>(null)
+    const [currentSvg, setCurrentSvg] = useState<SvgData[] | null>([])
     const [showBorders, setShowBorders] = useState<boolean>(false)
     const [pathColors, setPathColors] = useState<Record<string, string>>({})
     const [tileRotations, setTileRotations] = useState<Record<string, number[]>>({})
+
+    const [groutThickness, setGroutThickness] = useState<
+        "none" | "thin" | "thick"
+    >("thin");
+
+    const setGroutThicknessWrapper = (groutThickness: string) => {
+        setGroutThickness(groutThickness as "none" | "thin" | "thick");
+      };
 
     const handleTileSelect = (tile: Tile) => {
         setSelectedTile(tile)
@@ -84,10 +92,10 @@ export default function Tiles() {
     return (
         <div>
             <TileSimulator />
-            <div className="container">
+            <div className="">
                 <div className="">
                     <div className="">
-                        <div className="">
+                        <div className="max-w-[1235px] mx-auto">
                             <TileSelection
                                 onTileSelect={handleTileSelect}
                                 selectedTile={selectedTile}
@@ -97,8 +105,8 @@ export default function Tiles() {
                             />
                         </div>
 
-                        <div className="py-[100px]">
-                            {currentSvg && currentSvg.length > 0 ? (
+                        <div className="py-[100px] container">
+                            {currentSvg && (
                                 <ColorEditor
                                     svgArray={currentSvg}
                                     showBorders={showBorders}
@@ -107,18 +115,20 @@ export default function Tiles() {
                                     onRotate={handleRotation}
                                     tileId={selectedTile?.id || ""}
                                     rotations={selectedTile ? tileRotations[selectedTile.id] : undefined}
+                                    groutThickness={groutThickness}
+                                    setGroutThickness={setGroutThicknessWrapper}
                                 />
-                            ) : (
-                                <div className="p-4 text-center text-gray-500">Select a tile to edit its colors</div>
                             )}
                         </div>
 
-                        <div className="">
+                        <div className="container">
                             <ViewPanel
                                 currentSvg={currentSvg}
                                 pathColors={pathColors}
                                 showBorders={showBorders}
                                 rotations={selectedTile ? tileRotations[selectedTile.id] : undefined}
+                                groutThickness={groutThickness}
+                                setGroutThickness={setGroutThicknessWrapper}
                             />
                         </div>
                     </div>
