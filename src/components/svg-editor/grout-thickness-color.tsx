@@ -1,10 +1,24 @@
 import React, { useState } from 'react'
 import { Button } from '../ui/button'
 
-function GroutThicknessColor() {
+interface Props {
+    groutThickness : string;
+    setGroutThickness : (groutThickness : string) => void
+  }
 
-    const [groutColor, setGroutColor] = useState<"red" | "gray" | "black">("red")
-    const [groutThickness, setGroutThickness] = useState<"none" | "thin" | "thick">("thin")
+function GroutThicknessColor({groutThickness,
+    setGroutThickness,}: Props) {
+
+    const [groutColor, setGroutColor] = useState<"orange" | "gray" | "black" | "blue">("orange")
+    // const [groutThickness, setGroutThickness] = useState<"none" | "thin" | "thick">("thin")
+
+
+    const colorBorderMap: Record<string, string> = {
+        orange: "border-orange-300",
+        gray: "border-gray-500",
+        black: "border-black",
+        blue: "border-blue-500",
+    };
     return (
         <div>
             <div className="flex justify-between ">
@@ -27,14 +41,18 @@ function GroutThicknessColor() {
                 <div className='space-y-4'>
                     <h3 className="text-sm font-medium">Grout Color:</h3>
                     <div className="flex gap-2">
-                        {["red", "gray", "black"].map((color) => (
-                            <button
+                        {["orange", "gray", "black", "blue"].map((color) => (
+                            <div
                                 key={color}
-                                className={`w-8 h-8 border-2 rounded  ${groutColor === color ? "border-black/20" : "border-transparent"
+                                className={`border-2 p-[2px] rounded flex items-center justify-center ${groutColor === color ? colorBorderMap[color] : "border-transparent"
                                     }`}
-                                style={{ backgroundColor: color }}
-                                onClick={() => setGroutColor(color as "red" | "gray" | "black")}
-                            />
+                            >
+                                <button
+                                    className="w-8 h-8 rounded"
+                                    style={{ backgroundColor: color }}
+                                    onClick={() => setGroutColor(color as "orange" | "gray" | "black" | "blue")}
+                                />
+                            </div>
                         ))}
                     </div>
                 </div>

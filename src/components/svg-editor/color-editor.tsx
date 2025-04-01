@@ -14,6 +14,8 @@ interface ColorEditorProps {
   onRotate: (tileId: string, index: number, newRotation: number) => void
   tileId: string
   rotations?: number[] // Accept rotations from parent
+  groutThickness : string;
+  setGroutThickness : (groutThickness : string) => void
 }
 
 export function ColorEditor({
@@ -22,6 +24,8 @@ export function ColorEditor({
   onRotate,
   tileId,
   rotations,
+  groutThickness,
+  setGroutThickness,
 }: ColorEditorProps) {
   const [selectedColors, setSelectedColors] = useState<ColorData[]>([])
   const [selectedPathId, setSelectedPathId] = useState<string | null>(null)
@@ -119,21 +123,29 @@ export function ColorEditor({
   return (
     <div className="flex gap-[130px]">
       {/* SVG Preview (Click to select a path) */}
-      <div className=" flex justify-center items-center">
-        <SvgRenderer
-          svgArray={svgArray}
-          selectedPathId={selectedPathId}
-          pathColors={pathColors}
-          onPathSelect={handlePathSelect}
-          onRotate={handleRotationChange}
-          rotations={rotations}
-        />
+      <div className="w-[482px] flex justify-center items-center">
+        {svgArray.length === 0 ? (
+          <div className="flex items-center justify-center bg-black/20 w-full h-full">
+            <p className="text-sm font-medium text-gray-500">No SVG data available.</p>
+          </div>
+        ) : (
+          <SvgRenderer
+            svgArray={svgArray}
+            selectedPathId={selectedPathId}
+            pathColors={pathColors}
+            onPathSelect={handlePathSelect}
+            onRotate={handleRotationChange}
+            rotations={rotations}
+          />
+        )}
       </div>
 
-      <div className="w-full">
+      <div className="w-[558px]">
         {/* Colors List */}
         <div className="space-y-2">
-          <h3 className="text-sm font-medium">Colors Used:</h3>
+          {svgArray.length !== 0 && (
+            <h3 className="text-sm font-medium">Colors Used:</h3>
+          )}
           <div className="flex flex-wrap gap-2">
             {Array.from(
               new Set([...Object.values(pathColors), ...svgArray.flatMap((svg) => svg.paths.map((p) => p.fill))])
@@ -199,7 +211,10 @@ export function ColorEditor({
           />
         </div>
         <div>
-          <GroutThicknessColor/>
+          <GroutThicknessColor 
+            groutThickness={groutThickness}
+            setGroutThickness={setGroutThickness}
+          />
         </div>
       </div>
 

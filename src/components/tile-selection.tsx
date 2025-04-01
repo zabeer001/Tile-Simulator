@@ -102,47 +102,27 @@ export function TileSelection({ onTileSelect, selectedTile, tileRotations = {}, 
   }, [tileRotations])
 
   return (
-    <div className=" space-y-4">
-      {/* <div className="flex flex-wrap gap-2 justify-between items-center">
-        <button
-          onClick={() => setSelectedCollection("Geometric")}
-          className={cn(
-            "px-3 py-1 text-sm rounded-full transition-colors",
-            selectedCollection === "Geometric"
-              ? "bg-primary text-primary-foreground"
-              : "bg-secondary hover:bg-secondary/80",
-          )}
-        >
-          Geometric
-        </button>
-
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">
-            Page {currentPage + 1} of {totalPages}
-          </span>
-        </div>
-      </div> */}
-
-      <div className="relative">
+    <div className="">
+      <div className="flex items-center justify-between">
         {/* Left navigation arrow */}
         <button
           onClick={goToPrevPage}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1 hover:bg-gray-100"
+          className=" bg-white border border-black rounded-full shadow-md p-1 hover:bg-gray-100"
           aria-label="Previous page"
         >
           <ChevronLeft className="h-6 w-6" />
         </button>
 
         {/* Carousel container */}
-        <div className="">
+        <div className="container">
           {/* First row */}
-          <div className="grid grid-cols-9 gap-4 mb-4">
+          <div className="grid grid-cols-9 gap-3 mb-4">
             {getRowTiles(0).map((tile) => (
               <div key={tile.id} className="flex flex-col items-center border border-[#595959]/40">
                 <button
                   onClick={() => handleTileSelect(tile)}
                   className={cn(
-                    "relative w-[100px] h-[100px]overflow-hidden transition-all bg-white",
+                    "relative w-[115px] h-[115px] overflow-hidden transition-all bg-white",
                     selectedTile?.id === tile.id
                       ? " scale-[0.98]"
                       : "",
@@ -192,19 +172,19 @@ export function TileSelection({ onTileSelect, selectedTile, tileRotations = {}, 
                     })}
                   </div>
                 </button>
-                <p className="text-xs font-medium text-center truncate mt-1 w-[100px]">{tile.name}</p>
+                <p className="text-[12px] font-normal text-center truncate mt-1 w-[100px]">{tile.name}</p>
               </div>
             ))}
           </div>
 
           {/* Second row */}
-          <div className="grid grid-cols-9 gap-4">
+          <div className="grid grid-cols-9 gap-3">
             {getRowTiles(1).map((tile) => (
               <div key={`second-${tile.id}`} className="flex flex-col items-center border border-[#595959]/40">
                 <button
                   onClick={() => handleTileSelect(tile)}
                   className={cn(
-                    "relative w-[100px] h-[100px] overflow-hidden  transition-all bg-white",
+                    "relative w-[112px] h-[112px] overflow-hidden  transition-all bg-white",
                     selectedTile?.id === tile.id
                       ? " scale-[0.98]"
                       : "",
@@ -262,7 +242,7 @@ export function TileSelection({ onTileSelect, selectedTile, tileRotations = {}, 
         {/* Right navigation arrow */}
         <button
           onClick={goToNextPage}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1 hover:bg-gray-100"
+          className=" bg-white border border-black rounded-full shadow-md p-1 hover:bg-gray-100"
           aria-label="Next page"
         >
           <ChevronRight className="h-6 w-6" />

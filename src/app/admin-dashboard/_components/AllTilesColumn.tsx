@@ -3,12 +3,10 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
-import { AllTilesDataType } from "./AllTilesData";
 import AuctionButton from "./AuctionButton";
+import { Tile } from "./AllTilesData";
 
-
-
-export const AllTilesColumn: ColumnDef<AllTilesDataType>[] = [
+export const AllTilesColumn: ColumnDef<Tile>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -34,9 +32,10 @@ export const AllTilesColumn: ColumnDef<AllTilesDataType>[] = [
   {
     header: "Tiles",
     cell: ({ row }) => {
+      console.log(row.original.image);
       return (
         <div className="w-full flex justify-center items-center">
-          <Image src={row.original.image} alt="tile image" width={75} height={75}/>
+          <Image src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${row.original.image}`}  alt="tile image" width={75} height={75}/>
         </div>
       );
     },
@@ -46,7 +45,9 @@ export const AllTilesColumn: ColumnDef<AllTilesDataType>[] = [
     cell: ({ row }) => {
       return (
         <div className="w-full flex justify-center items-center">
-          <span className="text-base font-normal text-black leading-[120%] text-center">{row.original.title}</span>
+          <span className="text-base font-normal text-black leading-[120%] text-center">
+            {row.original.name}
+          </span>
         </div>
       );
     },
@@ -54,9 +55,14 @@ export const AllTilesColumn: ColumnDef<AllTilesDataType>[] = [
   {
     header: "Category",
     cell: ({ row }) => {
+      console.log(row);
       return (
         <div className="w-full flex justify-center items-center">
-          <span className="text-base font-normal text-black leading-[120%] text-center">{row.original.category}</span>
+          <span className="text-base font-normal text-black leading-[120%] text-center">
+            {row.original.categories.length > 0
+              ? row.original.categories[0].name
+              : "No Category"}
+          </span>
         </div>
       );
     },
@@ -66,7 +72,9 @@ export const AllTilesColumn: ColumnDef<AllTilesDataType>[] = [
     cell: ({ row }) => {
       return (
         <div className="w-full flex justify-center items-center">
-          <span className="text-base font-normal text-black leading-[120%] text-center">{row.original.added}</span>
+          <span className="text-base font-normal text-black leading-[120%] text-center">
+            {row.original.created_at}
+          </span>
         </div>
       );
     },
@@ -74,12 +82,12 @@ export const AllTilesColumn: ColumnDef<AllTilesDataType>[] = [
 
   {
     header: "Actions",
-    cell: ({row}) => {
+    cell: ({ row }) => {
       return (
         <div>
-          <AuctionButton row={row}/>
+          <AuctionButton row={row} />
         </div>
       );
     },
-  }
+  },
 ];

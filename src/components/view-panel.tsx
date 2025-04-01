@@ -12,6 +12,8 @@ interface Props {
   pathColors?: Record<string, string>
   showBorders?: boolean
   rotations?: number[]
+  groutThickness : string;
+  setGroutThickness : (groutThickness : string) => void
 }
 
 export default function ViewPanel({
@@ -19,13 +21,21 @@ export default function ViewPanel({
   pathColors = {},
   showBorders = false,
   rotations = [0, 0, 0, 0],
+  groutThickness,
+  setGroutThickness,
 }: Props) {
   const [gridSize, setGridSize] = useState<"8x8" | "12x12">("8x8")
-  const [environment, setEnvironment] = useState<"bedroom" | "bathroom" | "kitchen" | "commercial" | "kitchen2" | "bathroom2">("bedroom")
+  const [environment, setEnvironment] = useState<"bedroom" | "bathroom" | "kitchen" | "commercial" | "kitchen2" | "bathroom2">()
   const [groutColor, setGroutColor] = useState<"white" | "gray" | "black">("white")
-  const [groutThickness, setGroutThickness] = useState<"none" | "thin" | "thick">("thin")
+  // const [groutThickness, setGroutThickness] = useState<"none" | "thin" | "thick">("thin")
   const tileGridRef = useRef<HTMLDivElement>(null)
   const [showTilePreview, setShowTilePreview] = useState(true)
+  console.log(setShowTilePreview)
+
+
+  const handleTileEnvironmentClose = () => {
+    setEnvironment(undefined)
+  }
 
   console.log(setGroutColor, setGroutThickness)
 
@@ -141,30 +151,43 @@ export default function ViewPanel({
           <div className="flex gap-5">
             <div className="relative w-full h-[500px] aspect-[4/3] rounded-lg overflow-hidden border border-gray-200">
               {/* Tile Preview Area - Placed FIRST so it appears behind the image */}
-              {showTilePreview && (
-                <div
-                  className={`absolute ${groutColor}-grout z-0`}
-                  style={{
-                    top: "0",
-                    left: "0",
-                    width: "800%",
-                    height: "400px",
-                    display: "grid",
-                    gridTemplateColumns: `repeat(${gridDimensions}, 1fr)`,
-                    gap: groutThickness === "none" ? "0px" : groutThickness === "thin" ? "1px" : "2px",
-                  }}
-                >
-                  <div
-                    ref={tileGridRef}
-                    className={`grid gap-[${groutThickness === "none" ? "0" : groutThickness === "thin" ? "1px" : "2px"}]   bg-${groutColor}`}
-                    style={{
-                      gridTemplateColumns: `repeat(${gridDimensions}, 1fr)`,
-                      width: "100%",
-                      height: "100%",
-                    }}
-                  />
-                </div>
-              )}
+
+              {
+                currentSvg?.length === 0 ? (
+                  <div className="flex items-center justify-center bg-black/20 w-full h-full">
+                    <h1 className="text-2xl">VIEW</h1>
+                  </div>
+                ) : (
+                  <div>
+                    {showTilePreview && (
+                      <div
+                        className={`absolute ${groutColor}-grout z-0`}
+                        style={{
+                          top: "0",
+                          left: "0",
+                          width: "800%",
+                          height: "400px",
+                          display: "grid",
+                          gridTemplateColumns: `repeat(${gridDimensions}, 1fr)`,
+                          gap: groutThickness === "none" ? "0px" : groutThickness === "thin" ? "1px" : "2px",
+                        }}
+                      >
+
+                        <div
+                          ref={tileGridRef}
+                          className={`grid gap-[${groutThickness === "none" ? "0" : groutThickness === "thin" ? "1px" : "2px"}]   bg-${groutColor}`}
+                          style={{
+                            gridTemplateColumns: `repeat(${gridDimensions}, 1fr)`,
+                            width: "100%",
+                            height: "100%",
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )
+              }
+
 
               {/* Environment Images - Placed AFTER tiles so they appear on top */}
               {environment === "bedroom" && (
@@ -188,11 +211,12 @@ export default function ViewPanel({
               {environment === "kitchen" && (
                 <Image
                   src="/assets/environment3.svg"
-                  alt="Kitchen"
+                  alt="Bathroom"
                   fill
                   className="object-cover z-10"
                   style={{ pointerEvents: "none" }}
                 />
+
               )}
               {environment === "commercial" && (
                 <Image
@@ -223,12 +247,14 @@ export default function ViewPanel({
               )}
 
               {/* Toggle Button */}
-              <Button
-                className="absolute bottom-2 right-2 bg-white/80 hover:bg-white text-black text-xs py-1 px-2 h-auto"
-                onClick={() => setShowTilePreview(!showTilePreview)}
-              >
-                {showTilePreview ? "Hide Tiles" : "Show Tiles"}
-              </Button>
+              {environment && (
+                <Button
+                  className="absolute top-2 z-50 right-2 bg-white/80 hover:bg-white text-black text-xs py-1 px-2 h-auto"
+                  onClick={handleTileEnvironmentClose}
+                >
+                  {showTilePreview ? "Hide Tiles" : "Show Tiles"}
+                </Button>
+              )}
             </div>
             <div className="space-y-4">
               <div className="grid grid-cols-1 gap-2">
@@ -238,7 +264,7 @@ export default function ViewPanel({
                   className="h-[83px] w-[144px] py-1"
                 >
                   <Image
-                    src="/assets/env_bedroom_hover_icon-1.png"
+                    src="/assets/env_kitchen_icon.png"
                     alt="Bedroom Hover Icon"
                     width={100}
                     height={100}
@@ -250,7 +276,7 @@ export default function ViewPanel({
                   className="h-[83px] w-[144px] py-1"
                 >
                   <Image
-                    src="/assets/Frame-1597881812.png"
+                    src="/assets/env_bathroom_icon.png"
                     alt="bathroom"
                     width={100}
                     height={100}
@@ -262,7 +288,7 @@ export default function ViewPanel({
                   className="h-[83px] w-[144px] py-1"
                 >
                   <Image
-                    src="/assets/Frame-1597881813.png"
+                    src="/assets/env_bathroom_icon.png"
                     alt="ketchen"
                     width={100}
                     height={100}
@@ -274,7 +300,7 @@ export default function ViewPanel({
                   className="h-[83px] w-[144px] py-1"
                 >
                   <Image
-                    src="/assets/Frame-1597881814.png"
+                    src="/assets/env_living_room_icon.png"
                     alt="Commercial"
                     width={100}
                     height={100}
@@ -286,7 +312,7 @@ export default function ViewPanel({
                   className="h-[83px] w-[144px] py-1"
                 >
                   <Image
-                    src="/assets/Frame-1597881815.png"
+                    src="/assets/env_commercial_room_icon.png"
                     alt="Commercial"
                     width={100}
                     height={100}
@@ -298,7 +324,7 @@ export default function ViewPanel({
                   className="h-[83px] w-[144px] py-1"
                 >
                   <Image
-                    src="/assets/Frame-1597881815.png"
+                    src="/assets/env_commercial_room_icon.png"
                     alt="Commercial"
                     width={100}
                     height={100}

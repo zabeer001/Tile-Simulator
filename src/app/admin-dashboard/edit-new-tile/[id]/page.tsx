@@ -1,7 +1,6 @@
 "use client"
 import { useParams } from "next/navigation"
 import { useState, useEffect, useCallback } from "react"
-import { AllTilesData } from "../../_components/AllTilesData"
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -13,6 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Save } from "lucide-react"
 import { toast } from "sonner"
 import SVGUpload from "../../add-new-tile/_components/SVGUpload"
+import { useQuery } from "@tanstack/react-query"
+import { ApiResponseTiles } from "../../_components/AllTilesData"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -56,18 +57,45 @@ const EditNewTile = () => {
   const [svgData, setSvgData] = useState<string>("")
   const [isLoading, setIsLoading] = useState(true)
 
+  const { data } = useQuery<ApiResponseTiles>({
+    queryKey: ["all tiles"],
+    queryFn: () =>
+      fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/tiles`
+      ).then((res) => res.json()),
+  });
+
+  console.log(data?.data?.data?.data);
+
   // Fetch tile data
   useEffect(() => {
-    const filterData = AllTilesData.filter((data) => data.id === Number(id))
+    if (!data || !data.data) return;
+    
+    const filterData = data?.data?.data?.data?.filter((item) => item.id === Number(id));
+  
     if (filterData.length > 0) {
-      setTileData(filterData[0])
-      // If the tile has SVG data, set it
+      setTileData(filterData[0]);
+  
+      // If the tile has an image, set it
       if (filterData[0].image) {
-        setSvgData(filterData[0].image)
+        setSvgData(filterData[0].image);
       }
     }
-    setIsLoading(false)
-  }, [id])
+  
+    setIsLoading(false);
+  }, [id, data]);  // Depend on both `id` and `data`
+  
+  // useEffect(() => {
+  //   const filterData = data?.data?.data?.data?.filter((data) => data.id === Number(id))
+  //   if (filterData.length > 0) {
+  //     setTileData(filterData[0])
+  //     // If the tile has SVG data, set it
+  //     if (filterData[0].image) {
+  //       setSvgData(filterData[0].image)
+  //     }
+  //   }
+  //   setIsLoading(false)
+  // }, [id])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -86,7 +114,7 @@ const EditNewTile = () => {
   useEffect(() => {
     if (tileData) {
       form.reset({
-        name: tileData?.title || "",
+        name: tileData?.name || "",
         description: tileData?.description || "",
         category: tileData?.category || "",
         gridSelection: tileData?.gridSelection || "",
