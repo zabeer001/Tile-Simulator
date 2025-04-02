@@ -35,6 +35,7 @@ export default function ViewPanel({
   const tileGridRef = useRef<HTMLDivElement>(null)
   const [showTilePreview, setShowTilePreview] = useState(true)
   console.log(setShowTilePreview)
+  console.log(setGridSize)
 
 
   const handleTileEnvironmentClose = () => {
