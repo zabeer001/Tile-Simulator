@@ -153,7 +153,7 @@ export default function ViewPanel({
 
 
           <div className="flex gap-5">
-            <div className="relative w-full h-[500px] aspect-[4/3] rounded-lg overflow-hidden border border-gray-200">
+            <div className="relative w-full h-[540px] aspect-[4/3] rounded-lg overflow-hidden border border-gray-200">
               {/* Tile Preview Area - Placed FIRST so it appears behind the image */}
 
               {
@@ -170,7 +170,7 @@ export default function ViewPanel({
                           top: "0",
                           left: "0",
                           width: "800%",
-                          height: "500px",
+                          height: "540px",
                           display: "grid",
                           gridTemplateColumns: `repeat(${gridDimensions}, 1fr)`,
                           gap: groutThickness === "none" ? "0px" : groutThickness === "thin" ? "1px" : "2px",
@@ -338,46 +338,9 @@ export default function ViewPanel({
             </div>
           </div>
 
-          {/* Grout Controls */}
-          {/* <div className="space-y-4">
-            <h3 className="text-sm font-medium">GROUT COLOR:</h3>
-            <div className="flex gap-2">
-              {["white", "gray", "black"].map((color) => (
-                <button
-                  key={color}
-                  className={`w-8 h-8 rounded-full border-2 ${groutColor === color ? "border-primary" : "border-transparent"
-                    }`}
-                  style={{ backgroundColor: color }}
-                  onClick={() => setGroutColor(color as "white" | "gray" | "black")}
-                />
-              ))}
-            </div>
-
-            <h3 className="text-sm font-medium">GROUT THICKNESS:</h3>
-            <div className="flex gap-2">
-              {["none", "thin", "thick"].map((thickness) => (
-                <Button
-                  key={thickness}
-                  variant={groutThickness === thickness ? "default" : "outline"}
-                  onClick={() => setGroutThickness(thickness as "none" | "thin" | "thick")}
-                >
-                  {thickness.charAt(0).toUpperCase() + thickness.slice(1)}
-                </Button>
-              ))}
-            </div>
-          </div> */}
         </TabsContent>
 
         <TabsContent value="grid-view" className="space-y-4">
-          {/* Grid Size Controls */}
-          <div className="flex gap-2">
-            <Button variant={gridSize === "8x8" ? "default" : "outline"} onClick={() => setGridSize("8x8")}>
-              8x8
-            </Button>
-            <Button variant={gridSize === "12x12" ? "default" : "outline"} onClick={() => setGridSize("12x12")}>
-              12x12
-            </Button>
-          </div>
 
           {/* Tile Grid */}
           <div
@@ -396,35 +359,6 @@ export default function ViewPanel({
               }}
             />
           </div>
-
-          {/* Grout Controls */}
-          {/* <div className="space-y-4">
-            <h3 className="text-sm font-medium">GROUT COLOR:</h3>
-            <div className="flex gap-2">
-              {["white", "gray", "black"].map((color) => (
-                <button
-                  key={color}
-                  className={`w-8 h-8 rounded-full border-2 ${groutColor === color ? "border-primary" : "border-transparent"
-                    }`}
-                  style={{ backgroundColor: color }}
-                  onClick={() => setGroutColor(color as "white" | "gray" | "black")}
-                />
-              ))}
-            </div>
-
-            <h3 className="text-sm font-medium">GROUT THICKNESS:</h3>
-            <div className="flex gap-2">
-              {["none", "thin", "thick"].map((thickness) => (
-                <Button
-                  key={thickness}
-                  variant={groutThickness === thickness ? "default" : "outline"}
-                  onClick={() => setGroutThickness(thickness as "none" | "thin" | "thick")}
-                >
-                  {thickness.charAt(0).toUpperCase() + thickness.slice(1)}
-                </Button>
-              ))}
-            </div>
-          </div> */}
         </TabsContent>
       </Tabs>
 
