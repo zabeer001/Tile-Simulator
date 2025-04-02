@@ -1,21 +1,25 @@
-"use client"
+"use client";
 
-import { useState, useCallback } from "react"
-import { SvgRenderer } from "./svg-renderer"
-import type { SvgData, ColorData } from "./types"
-import { ColorPicker } from "./color-picker"
-import GroutThicknessColor from "./grout-thickness-color"
+import { useState, useCallback } from "react";
+import { SvgRenderer } from "./svg-renderer";
+import type { SvgData, ColorData } from "./types";
+import { ColorPicker } from "./color-picker";
+import GroutThicknessColor from "./grout-thickness-color";
 
 interface ColorEditorProps {
-  svgArray: SvgData[] // Expect an array of SvgData
-  showBorders: boolean
-  setShowBorders: (show: boolean) => void
-  onColorSelect?: (pathId: string, color: ColorData) => void
-  onRotate: (tileId: string, index: number, newRotation: number) => void
-  tileId: string
-  rotations?: number[] // Accept rotations from parent
-  groutThickness : string;
-  setGroutThickness : (groutThickness : string) => void
+  svgArray: SvgData[]; // Expect an array of SvgData
+  showBorders: boolean;
+  setShowBorders: (show: boolean) => void;
+  onColorSelect?: (pathId: string, color: ColorData) => void;
+  onRotate: (tileId: string, index: number, newRotation: number) => void;
+  tileId: string;
+  rotations?: number[]; // Accept rotations from parent
+  groutThickness: string;
+  setGroutThickness: (groutThickness: string) => void;
+  groutColor: string;
+  setGroutColor: (groutColor: string) => void;
+  showColorPicker : boolean;
+  setShowColorPicker : (showColorPicker: boolean) => void
 }
 
 export function ColorEditor({
@@ -26,26 +30,32 @@ export function ColorEditor({
   rotations,
   groutThickness,
   setGroutThickness,
+  groutColor,
+  setGroutColor,
+  showColorPicker,
+  setShowColorPicker,
 }: ColorEditorProps) {
-  const [selectedColors, setSelectedColors] = useState<ColorData[]>([])
-  const [selectedPathId, setSelectedPathId] = useState<string | null>(null)
-  const [pathColors, setPathColors] = useState<Record<string, string>>({})
+  const [selectedColors, setSelectedColors] = useState<ColorData[]>([]);
+  const [selectedPathId, setSelectedPathId] = useState<string | null>(null);
+  const [pathColors, setPathColors] = useState<Record<string, string>>({});
 
   const handlePathSelect = useCallback(
     (pathId: string) => {
-      setSelectedPathId(pathId)
+      setSelectedPathId(pathId);
 
       // Assign color from path fill or default to red if not available
       setPathColors((prev) => ({
         ...prev,
         [pathId]:
           prev[pathId] ||
-          svgArray.find((svg) => svg.paths.find((p) => p.id === pathId))?.paths.find((p) => p.id === pathId)?.fill ||
+          svgArray
+            .find((svg) => svg.paths.find((p) => p.id === pathId))
+            ?.paths.find((p) => p.id === pathId)?.fill ||
           "red",
-      }))
+      }));
     },
-    [svgArray],
-  )
+    [svgArray]
+  );
 
   // const handleSave = () => {
   //   console.log("Saved Path Colors:", pathColors)
@@ -54,22 +64,22 @@ export function ColorEditor({
 
   const handleColorSelect = useCallback(
     (color: string) => {
-      if (!selectedPathId) return
+      if (!selectedPathId) return;
 
       // Extract the base identifier from the path ID
-      const pathIdParts = selectedPathId.split("-")
-      const baseIdentifier = pathIdParts[pathIdParts.length - 1]
+      const pathIdParts = selectedPathId.split("-");
+      const baseIdentifier = pathIdParts[pathIdParts.length - 1];
 
       // Find all paths with matching identifiers across all SVGs
       const relatedPaths = svgArray.flatMap((svg) =>
         svg.paths
           .filter((path) => {
-            const parts = path.id.split("-")
-            const pathIdentifier = parts[parts.length - 1]
-            return pathIdentifier === baseIdentifier
+            const parts = path.id.split("-");
+            const pathIdentifier = parts[parts.length - 1];
+            return pathIdentifier === baseIdentifier;
           })
-          .map((path) => path.id),
-      )
+          .map((path) => path.id)
+      );
 
       // Create a new color object for each related path
       relatedPaths.forEach((pathId) => {
@@ -77,24 +87,24 @@ export function ColorEditor({
           id: `${pathId}-${color}`,
           color,
           name: `Color ${color}`,
-        }
+        };
 
         setPathColors((prev) => ({
           ...prev,
           [pathId]: color,
-        }))
+        }));
 
         if (!selectedColors.some((c) => c.color === color)) {
-          setSelectedColors((prev) => [...prev, newColor])
+          setSelectedColors((prev) => [...prev, newColor]);
         }
 
         if (onColorSelect) {
-          onColorSelect(pathId, newColor)
+          onColorSelect(pathId, newColor);
         }
-      })
+      });
     },
-    [selectedPathId, onColorSelect, selectedColors, svgArray],
-  )
+    [selectedPathId, onColorSelect, selectedColors, svgArray]
+  );
 
   // const handleRemoveColor = useCallback(
   //   (colorToRemove: string) => {
@@ -112,13 +122,13 @@ export function ColorEditor({
   // )
 
   const handleRotationChange = (index: number, newRotation: number) => {
-    console.log(`[COLOR EDITOR] Rotating SVG ${index} to ${newRotation}°`)
+    console.log(`[COLOR EDITOR] Rotating SVG ${index} to ${newRotation}°`);
 
     // Pass the rotation to the parent via the onRotate function
-    onRotate(tileId, index, newRotation)
-  }
+    onRotate(tileId, index, newRotation);
+  };
 
-  const selectedPathColor = selectedPathId ? pathColors[selectedPathId] : null
+  const selectedPathColor = selectedPathId ? pathColors[selectedPathId] : null;
 
   return (
     <div className="flex gap-[130px]">
@@ -126,7 +136,9 @@ export function ColorEditor({
       <div className="w-[482px] flex justify-center items-center">
         {svgArray.length === 0 ? (
           <div className="flex items-center justify-center bg-black/20 w-full h-full">
-            <p className="text-sm font-medium text-gray-500">No SVG data available.</p>
+            <p className="text-sm font-medium text-gray-500">
+              No SVG data available.
+            </p>
           </div>
         ) : (
           <SvgRenderer
@@ -148,16 +160,21 @@ export function ColorEditor({
           )}
           <div className="flex flex-wrap gap-2">
             {Array.from(
-              new Set([...Object.values(pathColors), ...svgArray.flatMap((svg) => svg.paths.map((p) => p.fill))])
+              new Set([
+                ...Object.values(pathColors),
+                ...svgArray.flatMap((svg) => svg.paths.map((p) => p.fill)),
+              ])
             ).map((color, index) => (
               <div
                 key={index}
                 className={`w-8 h-8 rounded border border-gray-200 cursor-pointer transition-transform 
-                    hover:scale-110 ${selectedPathColor === color ? "ring-2 ring-black" : ""}`}
+                    hover:scale-110 ${
+                      selectedPathColor === color ? "ring-2 ring-black" : ""
+                    }`}
                 style={{ backgroundColor: color }}
                 onClick={() => {
                   if (selectedPathId && color !== undefined) {
-                    handleColorSelect(color)
+                    handleColorSelect(color);
                   }
                 }}
               />
@@ -186,15 +203,17 @@ export function ColorEditor({
           </Button>
         </div> */}
 
-
-
         {/* Color Palette */}
         <div className="space-y-4 mt-[32px]">
           <div className="grid grid-cols-10 gap-1">
             {colorPalette.map((color, index) => (
               <button
                 key={index}
-                className={`w-8 h-8 rounded-sm border transition-transform hover:scale-110 ${selectedPathColor === color ? "border-black ring-2 ring-black/20" : "border-gray-200"}`}
+                className={`w-8 h-8 rounded-sm border transition-transform hover:scale-110 ${
+                  selectedPathColor === color
+                    ? "border-black ring-2 ring-black/20"
+                    : "border-gray-200"
+                }`}
                 style={{ backgroundColor: color }}
                 onClick={() => handleColorSelect(color)}
                 disabled={!selectedPathId}
@@ -208,22 +227,25 @@ export function ColorEditor({
             color={selectedPathColor || "#000000"}
             onChange={(color) => selectedPathId && handleColorSelect(color)}
             recentColors={Object.values(pathColors).filter(Boolean)}
+            showColorPicker={showColorPicker}
+            setShowColorPicker={setShowColorPicker}
           />
         </div>
         <div>
-          <GroutThicknessColor 
+          <GroutThicknessColor
             groutThickness={groutThickness}
             setGroutThickness={setGroutThickness}
+            groutColor={groutColor}
+            setGroutColor={setGroutColor}
           />
         </div>
       </div>
-
 
       {/* <Button className="w-full" onClick={handleSave}>
           Save
         </Button> */}
     </div>
-  )
+  );
 }
 
 const colorPalette = [
@@ -283,5 +305,4 @@ const colorPalette = [
   "#33ffa1",
   "#ffeb33",
   "#ff3362",
-]
-
+];
