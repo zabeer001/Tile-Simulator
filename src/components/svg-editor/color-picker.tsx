@@ -356,7 +356,7 @@ export function ColorPicker({ color, onChange, recentColors = [], showColorPicke
                   left: `${saturation}%`,
                   top: `${100 - lightness}%`,
                 }}
-              />
+              /> 
             </div>
 
             <div className="p-4 space-y-4">
