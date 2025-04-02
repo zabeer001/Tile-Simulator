@@ -13,7 +13,9 @@ interface Props {
   showBorders?: boolean
   rotations?: number[]
   groutThickness : string;
-  setGroutThickness : (groutThickness : string) => void
+  setGroutThickness : (groutThickness : string) => void;
+  setGroutColor: (groutColor: string) => void;
+  groutColor: string;
 }
 
 export default function ViewPanel({
@@ -23,10 +25,12 @@ export default function ViewPanel({
   rotations = [0, 0, 0, 0],
   groutThickness,
   setGroutThickness,
+  setGroutColor,
+  groutColor,
 }: Props) {
   const [gridSize, setGridSize] = useState<"8x8" | "12x12">("8x8")
   const [environment, setEnvironment] = useState<"bedroom" | "bathroom" | "kitchen" | "commercial" | "kitchen2" | "bathroom2">()
-  const [groutColor, setGroutColor] = useState<"white" | "gray" | "black">("white")
+  // const [groutColor, setGroutColor] = useState<"white" | "gray" | "black">("white")
   // const [groutThickness, setGroutThickness] = useState<"none" | "thin" | "thick">("thin")
   const tileGridRef = useRef<HTMLDivElement>(null)
   const [showTilePreview, setShowTilePreview] = useState(true)
@@ -166,7 +170,7 @@ export default function ViewPanel({
                           top: "0",
                           left: "0",
                           width: "800%",
-                          height: "400px",
+                          height: "500px",
                           display: "grid",
                           gridTemplateColumns: `repeat(${gridDimensions}, 1fr)`,
                           gap: groutThickness === "none" ? "0px" : groutThickness === "thin" ? "1px" : "2px",
@@ -249,7 +253,7 @@ export default function ViewPanel({
               {/* Toggle Button */}
               {environment && (
                 <Button
-                  className="absolute top-2 z-50 right-2 bg-white/80 hover:bg-white text-black text-xs py-1 px-2 h-auto"
+                  className="absolute top-2 z-30 right-2 bg-white/80 hover:bg-white text-black text-xs py-1 px-2 h-auto"
                   onClick={handleTileEnvironmentClose}
                 >
                   {showTilePreview ? "Hide Tiles" : "Show Tiles"}
@@ -441,9 +445,10 @@ export default function ViewPanel({
         .none { gap: 0; }
         .thin { gap: 1px; }
         .thick { gap: 2px; }
-        .white-grout { background-color: white; }
-        .gray-grout { background-color: #666; }
-        .black-grout { background-color: black; }
+        .orange-grout { background-color: orange; }
+        .green-grout { background-color: green; }
+        .turquoise-grout { background-color: turquoise; }
+        .blue-grout { background-color: blue; }
       `}</style>
     </div>
   )

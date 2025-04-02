@@ -8,7 +8,9 @@ import { ChevronDown } from "lucide-react"
 interface ColorPickerProps {
   color: string
   onChange: (color: string) => void
-  recentColors?: string[]
+  recentColors?: string[];
+  showColorPicker : boolean;
+  setShowColorPicker : (showColorPicker: boolean) => void
 
 }
 
@@ -29,12 +31,13 @@ const namedColors = [
   { name: "Yellow", color: "#FFEB3B" },
 ]
 
-export function ColorPicker({ color, onChange, recentColors = [] }: ColorPickerProps) {
+export function ColorPicker({ color, onChange, recentColors = [], showColorPicker,
+  setShowColorPicker }: ColorPickerProps) {
   const [hue, setHue] = useState(0)
   const [saturation, setSaturation] = useState(100)
   const [lightness, setLightness] = useState(50)
   const [hexValue, setHexValue] = useState(color || "#000000")
-  const [showColorPicker, setShowColorPicker] = useState(false)
+  // const [showColorPicker, setShowColorPicker] = useState(false)
   const [savedColors, setSavedColors] = useState<string[]>([])
 
   const paletteRef = useRef<HTMLDivElement>(null)
@@ -256,7 +259,7 @@ export function ColorPicker({ color, onChange, recentColors = [] }: ColorPickerP
   return (
     <div className="w-full">
       {!showColorPicker ? (
-        <div className=" flex justify-between" >
+        <div className="flex justify-between" >
           {/* Pen tool button */}
           <div className="flex items-start gap-4 w-[300px] p-4 rounded-lg"  style={{ boxShadow: "0px 0px 8px 0px #00000029" }}>
             <button
