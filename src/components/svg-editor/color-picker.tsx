@@ -271,14 +271,14 @@ export function ColorPicker({
   return (
     <div className="w-full">
       {!showColorPicker ? (
-        <div className="flex justify-between">
+        <div className="flex gap-8">
           {/* Pen tool button */}
           <div
-            className="flex items-start gap-4 w-[300px] p-4 rounded-lg"
+            className="flex items-start gap-4 w-[200px] p-4 rounded-lg"
             style={{ boxShadow: "0px 0px 8px 0px #00000029" }}
           >
             <button
-              className="w-12 h-12 bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition-colors flex items-center justify-center"
+              className="w-7 h-7 bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition-colors flex items-center justify-center"
               onClick={() => setShowColorPicker(true)}
             >
               <svg
@@ -302,7 +302,7 @@ export function ColorPicker({
             <div className="flex-1">
               {/* Hue slider */}
               <div
-                className="w-full h-4 rounded-md cursor-pointer relative mb-4"
+                className="w-full h-2 rounded-md cursor-pointer relative mb-2"
                 style={{
                   background:
                     "linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%)",
@@ -310,18 +310,18 @@ export function ColorPicker({
                 onClick={handleHueClick}
               >
                 <div
-                  className="w-6 h-6 bg-white rounded-full absolute -translate-x-1/2 -translate-y-1/2 top-1/2 pointer-events-none border border-gray-300"
+                  className="w-4 h-4 bg-white rounded-full absolute -translate-x-1/2 -translate-y-1/2 top-1/2 pointer-events-none border border-gray-300"
                   style={{ left: `${(hue / 360) * 100}%` }}
                 />
               </div>
 
               {/* Saturation slider */}
               <div
-                className="w-full h-4 rounded-md cursor-pointer relative bg-gradient-to-r from-gray-300 to-green-500"
+                className="w-full h-2 rounded-md cursor-pointer relative bg-gradient-to-r from-gray-300 to-green-500"
                 onClick={handleSaturationClick}
               >
                 <div
-                  className="w-6 h-6 bg-white rounded-full absolute -translate-x-1/2 -translate-y-1/2 top-1/2 pointer-events-none border border-gray-300"
+                  className="w-4 h-4 bg-white rounded-full absolute -translate-x-1/2 -translate-y-1/2 top-1/2 pointer-events-none border border-gray-300"
                   style={{ left: `${saturation}%` }}
                 />
               </div>
@@ -358,33 +358,32 @@ export function ColorPicker({
           </div>
         </div>
       ) : (
-        <div className=" bg-white overflow-hidden absolute z-50 shadow-lg rounded-lg">
-          <div className="w-full flex items-center justify-end pr-4 pt-2">
+        <div className=" bg-white overflow-hidden absolute z-50 shadow-lg rounded-lg border ">
+          <div className="w-full flex items-center justify-end pr-2 pt-2">
             <X
               onClick={() => setShowColorPicker(false)}
               className="w-7 h-7 text-white bg-red-500 p-1 rounded cursor-pointer"
             />
           </div>
           {/* Color gradient square */}
-          <div className="flex gap-2 p-4">
+
+          <div className="flex gap-2 p-2">
+
+          <div className="p-2 rounded " style={{ boxShadow: "0px 0px 8px 0px #00000029" }}>
             <div
-              className=" p-2 rounded "
-              style={{ boxShadow: "0px 0px 8px 0px #00000029" }}
+              ref={paletteRef}
+              className="w-full h-64 cursor-crosshair relative"
+              style={{ background: getPaletteBackground() }}
+              onClick={handlePaletteClick}
             >
               <div
-                ref={paletteRef}
-                className="w-full h-64 cursor-crosshair relative"
-                style={{ background: getPaletteBackground() }}
-                onClick={handlePaletteClick}
-              >
-                <div
-                  className="w-4 h-4 rounded-full border-2 border-white absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-                  style={{
-                    left: `${saturation}%`,
-                    top: `${100 - lightness}%`,
-                  }}
-                />
-              </div>
+                className="w-4 h-4 rounded-full border-2 border-white absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                style={{
+                  left: `${saturation}%`,
+                  top: `${100 - lightness}%`,
+                }}
+              />
+            </div>
 
               <div className="p-4 space-y-4">
                 <div className="flex items-center gap-2">
@@ -513,7 +512,7 @@ export function ColorPicker({
               </div>
             </div>
           </div>
-        </div>
+          </div>
       )}
     </div>
   );
